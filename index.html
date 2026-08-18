@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Doha Project Stocks - Industrial Catalog & RFQ</title>
   
-  <!-- SheetJS to parse stock.xlsx directly in browser -->
+  <!-- SheetJS to parse stock spreadsheet directly in browser -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <style>
@@ -1029,7 +1029,7 @@
   <!-- Catalog Subheader -->
   <div class="catalog-bar">
     <h2 style="font-size: 18px;">Material Inventory</h2>
-    <span class="count-text" id="countDisplay">Loading catalog...</span>
+    <span class="count-text" id="countDisplay">Connecting to live stock feed...</span>
   </div>
 
   <!-- Product Grid -->
@@ -1200,7 +1200,10 @@
   const COMPANY_EMAIL = "sales@dohaprojects.com";
   const ADMIN_PIN = "1234";
 
-  // Dynamic Theme-Aware SVG Placeholder (Pure White in Light Mode, Pure Black in Dark Mode)
+  // ================= LIVE GOOGLE SHEET CSV FEED =================
+  const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1PyNtiW0wxCtb3hOAr_kdxiEHDAPJbzwP/gviz/tq?tqx=out:csv";
+
+  // Dynamic Theme-Aware SVG Placeholder
   function getPlaceholderSVG() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const bg = isDark ? '%23000000' : '%23ffffff';
@@ -1333,7 +1336,7 @@
     'Other Products': 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=500&auto=format&fit=crop&q=60'
   };
 
-  // Multi-word rules
+  // Description Prefix / Keyword Image Rules
   const defaultPrefixRules = {
     'NIPPLE PIPE': 'images/NIPPLE.webp',
     'NIPPLE HEX': 'images/NIPPLE.webp',
@@ -1467,14 +1470,15 @@
     }
   }
 
-  // ================= AUTO-LOAD PUBLIC STOCK SPREADSHEET =================
+  // ================= AUTO-LOAD FROM LIVE GOOGLE SHEET =================
   async function loadPublicStockFile() {
     try {
-      const response = await fetch('stock.xlsx');
+      const fetchUrl = `${GOOGLE_SHEET_CSV_URL}&_t=${Date.now()}`;
+      const response = await fetch(fetchUrl);
       if (!response.ok) return;
 
-      const data = await response.arrayBuffer();
-      const workbook = XLSX.read(new Uint8Array(data), { type: 'array' });
+      const csvText = await response.text();
+      const workbook = XLSX.read(csvText, { type: 'string' });
       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
 
@@ -1486,10 +1490,10 @@
             cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k];
           });
 
-          const rawCode = cleanRow['item code'] || cleanRow['code'] || '';
-          const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['name'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
-          const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || 0);
-          const unit = String(cleanRow['unit'] || 'NOS').trim();
+          const rawCode = cleanRow['item code'] || cleanRow['code'] || cleanRow['item no'] || cleanRow['part no'] || '';
+          const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['item desc'] || cleanRow['name'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
+          const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || cleanRow['balance qty'] || 0);
+          const unit = String(cleanRow['unit'] || cleanRow['uom'] || 'NOS').trim();
 
           if (rawCode && name) {
             parsedItems.push({
@@ -1509,7 +1513,7 @@
         }
       }
     } catch (err) {
-      console.log("Remote stock.xlsx not found, using saved inventory.");
+      console.log("Could not load Google Sheet feed, loading cached storage.", err);
     }
   }
 
@@ -1710,8 +1714,7 @@
         rows.forEach(row => {
           const cleanRow = {};
           Object.keys(row).forEach(k => {
-            const cleanKey = k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase();
-            cleanRow[cleanKey] = row[k];
+            cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k];
           });
 
           const rawCode = cleanRow['item code'] || cleanRow['code'] || '';
@@ -2270,7 +2273,7 @@ ${name}`;
       console.warn("Using fallback memory storage:", e);
     }
     
-    // Automatically load stock.xlsx if present in repository root
+    // Automatically load stock from live Google Sheet on page open
     await loadPublicStockFile();
 
     renderPrefixRulesTable();
