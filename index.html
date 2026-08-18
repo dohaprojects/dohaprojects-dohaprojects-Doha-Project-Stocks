@@ -190,7 +190,7 @@
     :root:not([data-theme="dark"]) .pro-slider-btn.btn-light-mode { color: #0f1111; }
     [data-theme="dark"] .pro-slider-btn.btn-dark-mode { color: #111827; }
 
-    /* Admin-Only Carousel Generator Button */
+    /* Admin Carousel Button */
     .btn-multi-share {
       background: #e11d48;
       color: white;
@@ -258,7 +258,7 @@
     }
     .count-text { color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
-    /* Multi-Selection Sticky Action Bar (Admin Only) */
+    /* Selection Banner */
     .selection-banner {
       background: #1e293b;
       color: #ffffff;
@@ -1455,7 +1455,7 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        await new Promise(r => setTimeout(r, 400)); // Small delay between slide downloads
+        await new Promise(r => setTimeout(r, 450)); // Sequential slide download gap
       }
     } else if (activeShareItem) {
       const canvas = await generateSlideCardCanvas(activeShareItem, 1, 1);
@@ -1515,18 +1515,24 @@
     canvas.height = 1080;
     const ctx = canvas.getContext("2d");
 
-    // Clean white poster background
+    // 1. Clean White Base Canvas
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, 1080, 1080);
 
-    // Subtle background mesh/glow
-    const bgGradient = ctx.createRadialGradient(540, 480, 50, 540, 480, 500);
-    bgGradient.addColorStop(0, "rgba(241, 245, 249, 0.8)");
-    bgGradient.addColorStop(1, "rgba(255, 255, 255, 1)");
+    // Subtle Clean Gradient
+    const bgGradient = ctx.createLinearGradient(0, 0, 1080, 1080);
+    bgGradient.addColorStop(0, "#ffffff");
+    bgGradient.addColorStop(0.5, "#f8fafc");
+    bgGradient.addColorStop(1, "#f1f5f9");
     ctx.fillStyle = bgGradient;
     ctx.fillRect(0, 0, 1080, 1080);
 
-    // 1. TOP BRAND HEADER
+    // Outer Poster Border
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 4;
+    ctx.strokeRect(16, 16, 1048, 1048);
+
+    // 2. TOP BRAND HEADER
     ctx.fillStyle = "#0f172a";
     ctx.font = "900 36px Arial, sans-serif";
     ctx.fillText("DOHA PROJECT", 60, 90);
@@ -1536,62 +1542,65 @@
     const brandWidth = ctx.measureText("DOHA PROJECT ").width;
     ctx.fillText("STOCKS", 60 + brandWidth, 90);
 
-    // 5G / Grade Badge Pill (like reference)
-    drawRoundedRect(ctx, 60 + brandWidth + 170, 60, 90, 38, 8, "#0f172a");
+    // Country Tag Badge
+    drawRoundedRect(ctx, 60 + brandWidth + 170, 60, 96, 38, 8, "#0f172a");
     ctx.fillStyle = "#ffffff";
-    ctx.font = "bold 18px Arial, sans-serif";
+    ctx.font = "bold 16px Arial, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("QATAR", 60 + brandWidth + 215, 86);
+    ctx.fillText("QATAR", 60 + brandWidth + 218, 85);
     ctx.textAlign = "start";
 
-    // Category Subtitle Pill
-    drawRoundedRect(ctx, 60, 115, 260, 36, 18, "#f1f5f9");
+    // Category Tag Pill
+    drawRoundedRect(ctx, 60, 115, 260, 36, 18, "#ffffff");
     ctx.strokeStyle = "#cbd5e1";
     ctx.lineWidth = 1.5;
     ctx.strokeRoundedRect(ctx, 60, 115, 260, 36, 18);
     ctx.fillStyle = "#007600";
-    ctx.font = "bold 14px Arial, sans-serif";
-    ctx.fillText(`●  ${item.category.toUpperCase()} EDITION`, 75, 138);
+    ctx.font = "bold 13.5px Arial, sans-serif";
+    ctx.fillText(`●  ${item.category.toUpperCase()}`, 78, 138);
 
-    // Slide Counter Indicator (e.g. 1/5) if part of multi-slide
+    // Slide Counter Indicator (e.g. 1/4)
     if (totalSlides > 1) {
-      drawRoundedRect(ctx, 940, 60, 80, 36, 18, "#0f172a");
+      drawRoundedRect(ctx, 930, 60, 90, 38, 19, "#0f172a");
       ctx.fillStyle = "#ffffff";
-      ctx.font = "bold 16px Arial, sans-serif";
+      ctx.font = "bold 18px Arial, sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText(`${slideIndex}/${totalSlides}`, 980, 84);
+      ctx.fillText(`${slideIndex}/${totalSlides}`, 975, 85);
       ctx.textAlign = "start";
     }
 
-    // 2. HERO CENTER PHOTO CARD WITH ACCENT BACKDROP
-    // Rounded Colored Card Backdrop (similar to the orange backplate in reference)
-    const cardBgGrad = ctx.createLinearGradient(300, 200, 780, 680);
-    cardBgGrad.addColorStop(0, "#f59e0b");
-    cardBgGrad.addColorStop(1, "#ea580c");
-    drawRoundedRect(ctx, 240, 220, 600, 440, 48, cardBgGrad);
+    // 3. NO-COLOR PURE CLEAN CARD FRAME (Replaced orange backdrop)
+    // Clean White / Frosted Soft Shadow Box
+    ctx.fillStyle = "#ffffff";
+    drawRoundedRect(ctx, 160, 200, 760, 480, 24, "#ffffff");
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 2;
+    ctx.strokeRoundedRect(ctx, 160, 200, 760, 480, 24);
 
-    // Subtle side accent notch
-    drawRoundedRect(ctx, 855, 360, 18, 160, 9, "#ea580c");
+    // Subtle inner grid pedestal
+    const innerPedestal = ctx.createLinearGradient(160, 560, 160, 680);
+    innerPedestal.addColorStop(0, "rgba(241, 245, 249, 0)");
+    innerPedestal.addColorStop(1, "rgba(241, 245, 249, 0.7)");
+    drawRoundedRect(ctx, 160, 560, 760, 120, 24, innerPedestal);
 
-    // Product Photo Frame
+    // Product Photo
     const img = await loadImageElementClean(getItemImage(item));
     const aspect = img.width / img.height;
-    let drawW = 460;
-    let drawH = 460 / aspect;
-    if (drawH > 460) { drawH = 460; drawW = 460 * aspect; }
+    let drawW = 540;
+    let drawH = 540 / aspect;
+    if (drawH > 420) { drawH = 420; drawW = 420 * aspect; }
 
-    // Soft Shadow under product
-    ctx.shadowColor = "rgba(0, 0, 0, 0.35)";
-    ctx.shadowBlur = 32;
-    ctx.shadowOffsetY = 16;
-    ctx.drawImage(img, 240 + (600 - drawW) / 2, 220 + (440 - drawH) / 2, drawW, drawH);
+    ctx.shadowColor = "rgba(15, 23, 42, 0.12)";
+    ctx.shadowBlur = 28;
+    ctx.shadowOffsetY = 14;
+    ctx.drawImage(img, 160 + (760 - drawW) / 2, 200 + (480 - drawH) / 2, drawW, drawH);
 
     // Reset shadow
     ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
     ctx.shadowOffsetY = 0;
 
-    // 3. BOTTOM PRODUCT INFO & CALL-TO-ACTION (CTA)
+    // 4. BOTTOM PRODUCT INFO & CTA
     ctx.fillStyle = "#64748b";
     ctx.font = "bold 20px Arial, sans-serif";
     ctx.fillText("ITEM CODE:", 60, 745);
@@ -1599,7 +1608,7 @@
     ctx.font = "bold 24px monospace";
     ctx.fillText(item.code, 190, 745);
 
-    // Product Full Description
+    // Product Full Description (Up to 2 lines)
     ctx.fillStyle = "#0f172a";
     ctx.font = "bold 32px Arial, sans-serif";
     const words = item.name.split(" ");
@@ -1615,10 +1624,10 @@
     // Stock Status Text
     const isOk = item.qty > 0;
     ctx.fillStyle = isOk ? "#007600" : "#b12704";
-    ctx.font = "900 38px Arial, sans-serif";
+    ctx.font = "900 36px Arial, sans-serif";
     ctx.fillText(isOk ? `✓ In Stock: ${item.qty} ${item.unit || 'NOS'}` : '❌ Out of Stock', 60, line2 ? 905 : 880);
 
-    // Modern CTA Button (like "Shop now" in reference image)
+    // CTA Button
     const ctaY = line2 ? 935 : 915;
     drawRoundedRect(ctx, 60, ctaY, 260, 68, 12, "#0f172a");
     ctx.fillStyle = "#ffffff";
@@ -1627,12 +1636,12 @@
     ctx.fillText("Inquire Now  ▸", 190, ctaY + 43);
     ctx.textAlign = "start";
 
-    // Subtext at bottom
+    // Bottom Subtext
     ctx.fillStyle = "#64748b";
     ctx.font = "16px Arial, sans-serif";
     ctx.fillText("*Formal Quotations & Mill Test Certificates Provided", 60, 1030);
 
-    // Website URL on Bottom Right
+    // Live URL
     ctx.fillStyle = "#0078d4";
     ctx.font = "bold 18px Arial, sans-serif";
     ctx.textAlign = "right";
@@ -1642,7 +1651,6 @@
     return canvas;
   }
 
-  // Helper function to draw rounded rectangles
   function drawRoundedRect(ctx, x, y, width, height, radius, fillStyle) {
     ctx.beginPath();
     ctx.moveTo(x + radius, y);
