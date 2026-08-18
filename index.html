@@ -55,18 +55,13 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    /* Circular Ripple Transition for the Page */
     ::view-transition-old(root),
     ::view-transition-new(root) {
       animation: none;
       mix-blend-mode: normal;
     }
-    ::view-transition-old(root) {
-      z-index: 1;
-    }
-    ::view-transition-new(root) {
-      z-index: 9999;
-    }
+    ::view-transition-old(root) { z-index: 1; }
+    ::view-transition-new(root) { z-index: 9999; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
@@ -75,7 +70,6 @@
       transition: background-color 0.4s ease, color 0.4s ease;
     }
 
-    /* Navigation Header */
     header {
       background: var(--nav-bg);
       color: white;
@@ -96,7 +90,7 @@
       align-items: center;
       gap: 10px;
       user-select: none;
-      text-decoration: none;
+      cursor: pointer;
     }
     .header-logo-img {
       height: 40px;
@@ -108,17 +102,14 @@
       padding: 2px 6px;
       display: block;
     }
-    .logo-text-group {
-      display: flex;
-      flex-direction: column;
-    }
+    .logo-text-group { display: flex; flex-direction: column; }
     .logo { font-size: 18px; font-weight: bold; line-height: 1.1; color: #ffffff; }
     .logo-tag { font-size: 10px; color: var(--nav-accent); text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; }
 
     .search-container {
       flex: 1;
       display: flex;
-      max-width: 650px;
+      max-width: 600px;
     }
     .search-category {
       background: var(--input-bg);
@@ -146,10 +137,9 @@
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
-    /* ================= PROFESSIONAL SLIDING PILL SWITCH ================= */
     .pro-slider-container {
       display: inline-flex;
       align-items: center;
@@ -196,16 +186,38 @@
       transition: color 0.3s ease;
       padding: 0;
     }
-    .pro-slider-btn svg {
-      width: 14px;
-      height: 14px;
-      fill: currentColor;
+    .pro-slider-btn svg { width: 14px; height: 14px; fill: currentColor; }
+    :root:not([data-theme="dark"]) .pro-slider-btn.btn-light-mode { color: #0f1111; }
+    [data-theme="dark"] .pro-slider-btn.btn-dark-mode { color: #111827; }
+
+    /* Admin-Only Instagram Post Button */
+    .btn-multi-share {
+      background: #e11d48;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none; /* Hidden by default */
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      height: 36px;
     }
-    :root:not([data-theme="dark"]) .pro-slider-btn.btn-light-mode {
-      color: #0f1111;
-    }
-    [data-theme="dark"] .pro-slider-btn.btn-dark-mode {
-      color: #111827;
+    .btn-multi-share:hover { background: #be123c; }
+
+    .btn-exit-admin {
+      background: #475569;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+      font-size: 12px;
+      height: 36px;
     }
 
     .btn-cart {
@@ -236,7 +248,6 @@
       padding: 0 16px;
     }
 
-    /* Catalog Bar */
     .catalog-bar {
       display: flex;
       justify-content: space-between;
@@ -247,7 +258,20 @@
     }
     .count-text { color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
-    /* Product Grid */
+    /* Multi-Selection Sticky Action Bar */
+    .selection-banner {
+      background: #1e293b;
+      color: #ffffff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .selection-banner.active { display: flex; }
+
     .product-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -261,7 +285,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.4s ease, border-color 0.4s ease;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
       position: relative;
       cursor: pointer;
       height: 410px;
@@ -282,8 +306,6 @@
       border-bottom: 1px solid var(--border);
       position: relative;
       flex-shrink: 0;
-      border-radius: 8px 8px 0 0;
-      transition: background-color 0.4s ease;
     }
     .img-wrapper img {
       width: 100%;
@@ -291,6 +313,19 @@
       object-fit: contain;
       object-position: center;
       display: block;
+    }
+
+    /* Selection Checkbox on Product Cards (Admin Only) */
+    .item-select-checkbox {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      accent-color: #e11d48;
+      z-index: 5;
+      display: none; /* Hidden by default */
     }
     
     .card-body {
@@ -318,7 +353,6 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
-      word-break: break-word;
     }
     
     .product-code {
@@ -335,7 +369,6 @@
     .stock-badge.ok { color: var(--green); }
     .stock-badge.low { color: var(--red); }
 
-    /* Card Actions */
     .card-actions {
       margin-top: auto;
       display: flex;
@@ -368,7 +401,6 @@
     }
     .btn-add-rfq:hover { background: var(--btn-yellow-hover); }
 
-    /* Amazon-Style Share Button */
     .btn-amazon-share {
       width: 34px;
       height: 34px;
@@ -380,25 +412,18 @@
       justify-content: center;
       cursor: pointer;
       color: var(--text);
-      transition: background 0.15s ease, border-color 0.15s ease;
       flex-shrink: 0;
-      padding: 0;
     }
     .btn-amazon-share:hover {
       background: var(--dropdown-hover);
       border-color: var(--nav-accent);
     }
-    .btn-amazon-share svg {
-      width: 17px;
-      height: 17px;
-      fill: currentColor;
-    }
+    .btn-amazon-share svg { width: 17px; height: 17px; fill: currentColor; }
 
-    /* Load More Button Wrapper */
     .load-more-wrapper {
       display: flex;
       justify-content: center;
-      margin: 30px 0 30px 0;
+      margin: 30px 0;
     }
     .btn-load-more {
       background: var(--card);
@@ -409,14 +434,8 @@
       font-size: 14px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      transition: background 0.15s ease, color 0.15s ease;
-    }
-    .btn-load-more:hover {
-      background: var(--dropdown-hover);
     }
 
-    /* Modals */
     .modal {
       display: none;
       position: fixed;
@@ -439,9 +458,7 @@
       color: var(--text-muted);
       z-index: 10;
     }
-    .modal-close:hover { color: var(--text); }
 
-    /* Item Details Modal */
     .item-modal-content {
       background: var(--modal-bg);
       color: var(--text);
@@ -452,7 +469,6 @@
       overflow: hidden;
       display: flex;
       position: relative;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
     }
     .item-modal-img {
       width: 48%;
@@ -469,7 +485,6 @@
       height: 100%;
       max-height: 300px;
       object-fit: contain;
-      display: block;
     }
     .item-modal-info {
       width: 52%;
@@ -478,18 +493,8 @@
       flex-direction: column;
       gap: 10px;
     }
-    .detail-tag {
-      font-size: 11px;
-      text-transform: uppercase;
-      font-weight: bold;
-      color: var(--blue);
-    }
-    .detail-title {
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 1.35;
-      word-break: break-word;
-    }
+    .detail-tag { font-size: 11px; text-transform: uppercase; font-weight: bold; color: var(--blue); }
+    .detail-title { font-size: 16px; font-weight: 700; line-height: 1.35; }
     .detail-box {
       background: var(--card-img-bg);
       padding: 12px;
@@ -497,32 +502,20 @@
       border: 1px solid var(--border);
       margin-top: 8px;
     }
-    .detail-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
+    .detail-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
     .detail-row:last-child { margin-bottom: 0; }
+    .modal-btn-row { margin-top: auto; display: flex; gap: 8px; align-items: center; }
 
-    .modal-btn-row {
-      margin-top: auto;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    /* Amazon-Style Share Dialog Modal */
+    /* Share Popup Modal */
     .share-modal-card {
       background: var(--modal-bg);
       color: var(--text);
       border: 1px solid var(--border);
       width: 100%;
-      max-width: 440px;
+      max-width: 480px;
       border-radius: 12px;
       padding: 22px;
       position: relative;
-      box-shadow: 0 16px 36px rgba(0,0,0,0.3);
       display: flex;
       flex-direction: column;
       gap: 16px;
@@ -537,8 +530,8 @@
       align-items: center;
     }
     .share-preview-thumb {
-      width: 64px;
-      height: 64px;
+      width: 70px;
+      height: 70px;
       object-fit: contain;
       background: #ffffff;
       border-radius: 6px;
@@ -557,7 +550,7 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 12px 8px;
+      padding: 14px 8px;
       border-radius: 8px;
       border: 1px solid var(--border);
       background: var(--card-img-bg);
@@ -566,19 +559,13 @@
       font-size: 12.5px;
       font-weight: 600;
       transition: all 0.15s ease;
-      text-decoration: none;
     }
     .btn-share-option:hover {
       background: var(--dropdown-hover);
       border-color: var(--nav-accent);
-      transform: translateY(-1px);
     }
-    .btn-share-option svg {
-      width: 24px;
-      height: 24px;
-    }
+    .btn-share-option svg { width: 26px; height: 26px; }
 
-    /* RFQ Cart Modal */
     .rfq-content {
       background: var(--modal-bg);
       color: var(--text);
@@ -642,22 +629,17 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      transition: background 0.15s ease;
     }
     .btn-submit-mail:hover { background: #005a9e; }
-    .btn-submit-web-outlook {
-      background: #107c41;
-    }
+    .btn-submit-web-outlook { background: #107c41; }
     .btn-submit-web-outlook:hover { background: #0b5a2f; }
 
-    /* Footer Section */
     footer {
       background-color: var(--footer-bg);
       color: #e5e7eb;
       padding: 48px 24px 24px 24px;
       margin-top: 40px;
       border-top: 3px solid var(--nav-accent);
-      transition: background-color 0.4s ease;
     }
     .footer-container {
       max-width: 1400px;
@@ -683,12 +665,7 @@
       height: 2px;
       background-color: var(--nav-accent);
     }
-    .footer-col p {
-      font-size: 13.5px;
-      line-height: 1.65;
-      color: #9ca3af;
-      margin-bottom: 12px;
-    }
+    .footer-col p { font-size: 13.5px; line-height: 1.65; color: #9ca3af; margin-bottom: 12px; }
     .footer-cert-badge {
       display: inline-block;
       background: rgba(245, 158, 11, 0.15);
@@ -699,43 +676,18 @@
       font-weight: 600;
       margin-top: 6px;
     }
-    .footer-products-list {
-      list-style: none;
-    }
-    .footer-products-list li {
-      margin-bottom: 8px;
-    }
+    .footer-products-list { list-style: none; }
+    .footer-products-list li { margin-bottom: 8px; }
     .footer-products-list a {
       color: #9ca3af;
       text-decoration: none;
       font-size: 13.5px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: color 0.15s ease;
       cursor: pointer;
     }
-    .footer-products-list a:hover {
-      color: var(--nav-accent);
-    }
-    .contact-item {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 12px;
-      font-size: 13.5px;
-      color: #9ca3af;
-      line-height: 1.5;
-    }
-    .contact-item strong {
-      color: #ffffff;
-    }
-    .contact-item a {
-      color: var(--nav-accent);
-      text-decoration: none;
-    }
-    .contact-item a:hover {
-      text-decoration: underline;
-    }
+    .footer-products-list a:hover { color: var(--nav-accent); }
+    .contact-item { display: flex; gap: 10px; margin-bottom: 12px; font-size: 13.5px; color: #9ca3af; }
+    .contact-item strong { color: #ffffff; }
+    .contact-item a { color: var(--nav-accent); text-decoration: none; }
     .footer-bottom {
       max-width: 1400px;
       margin: 36px auto 0 auto;
@@ -746,120 +698,41 @@
       color: #6b7280;
     }
 
-    /* ================= MOBILE RESPONSIVE ADAPTATIONS ================= */
     @media (max-width: 860px) {
-      header {
-        flex-wrap: wrap;
-        padding: 10px 14px;
-        gap: 10px;
-      }
-      .logo-box {
-        order: 1;
-      }
-      .header-actions {
-        order: 2;
-        margin-left: auto;
-      }
-      .search-container {
-        order: 3;
-        width: 100%;
-        max-width: 100%;
-      }
-      .footer-container {
-        grid-template-columns: 1fr;
-        gap: 28px;
-      }
-      .submit-actions-row {
-        flex-direction: column;
-      }
+      header { flex-wrap: wrap; padding: 10px 14px; gap: 10px; }
+      .logo-box { order: 1; }
+      .header-actions { order: 2; margin-left: auto; }
+      .search-container { order: 3; width: 100%; max-width: 100%; }
+      .footer-container { grid-template-columns: 1fr; gap: 28px; }
+      .submit-actions-row { flex-direction: column; }
     }
 
     @media (max-width: 600px) {
-      .container {
-        padding: 0 10px;
-        margin: 12px auto;
-      }
-      .product-grid {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 10px;
-      }
-      .product-card {
-        height: auto;
-        min-height: 350px;
-      }
-      .img-wrapper {
-        height: 140px;
-        padding: 8px;
-      }
-      .card-body {
-        padding: 8px;
-        gap: 2px;
-      }
-      .product-title {
-        font-size: 12.5px;
-        height: 34px;
-      }
-      .product-code {
-        font-size: 11px;
-      }
-      .stock-badge {
-        font-size: 11.5px;
-        margin: 2px 0 4px 0;
-      }
-      .card-actions {
-        gap: 4px;
-      }
-      .qty-select {
-        width: 44px;
-        padding: 4px;
-        font-size: 12px;
-      }
-      .btn-add-rfq {
-        font-size: 11.5px;
-        padding: 6px 4px;
-      }
-      .btn-amazon-share {
-        width: 30px;
-        height: 30px;
-      }
-      .item-modal-content {
-        flex-direction: column;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-      .item-modal-img {
-        width: 100%;
-        min-height: 180px;
-        height: 180px;
-        padding: 12px;
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-      }
-      .item-modal-info {
-        width: 100%;
-        padding: 16px;
-      }
-      .customer-form {
-        grid-template-columns: 1fr;
-        padding: 10px;
-      }
-      .rfq-content {
-        padding: 16px;
-      }
-      .rfq-table {
-        font-size: 11.5px;
-      }
-      .rfq-table th, .rfq-table td {
-        padding: 6px 4px;
-      }
+      .container { padding: 0 10px; margin: 12px auto; }
+      .product-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+      .product-card { height: auto; min-height: 350px; }
+      .img-wrapper { height: 140px; padding: 8px; }
+      .card-body { padding: 8px; gap: 2px; }
+      .product-title { font-size: 12.5px; height: 34px; }
+      .product-code { font-size: 11px; }
+      .stock-badge { font-size: 11.5px; margin: 2px 0 4px 0; }
+      .card-actions { gap: 4px; }
+      .qty-select { width: 44px; padding: 4px; font-size: 12px; }
+      .btn-add-rfq { font-size: 11.5px; padding: 6px 4px; }
+      .btn-amazon-share { width: 30px; height: 30px; }
+      .item-modal-content { flex-direction: column; max-height: 90vh; overflow-y: auto; }
+      .item-modal-img { width: 100%; min-height: 180px; height: 180px; padding: 12px; border-right: none; border-bottom: 1px solid var(--border); }
+      .item-modal-info { width: 100%; padding: 16px; }
+      .customer-form { grid-template-columns: 1fr; padding: 10px; }
+      .rfq-content { padding: 16px; }
     }
   </style>
 </head>
 <body>
 
-<!-- Navigation Header -->
 <header>
-  <div class="logo-box">
+  <!-- Triple-click logo or press Ctrl+Shift+A for Admin -->
+  <div class="logo-box" id="secretLogoTrigger" title="Doha Project Stocks">
     <img class="header-logo-img" src="images/dp1.png" alt="Doha Project Logo" onerror="handleLogoFallback(this)">
     <div class="logo-text-group">
       <span class="logo">Doha Project Stocks</span>
@@ -881,13 +754,13 @@
       type="text" 
       id="searchQuery" 
       class="search-input" 
-      placeholder="Search words in any order (e.g. PIPE SCH 40, ELBOW 90, NIPPLE, 004433)..." 
+      placeholder="Search words in any order (e.g. PIPE SCH 40, ELBOW 90, NIPPLE)..." 
       onkeyup="resetAndRender()"
     >
   </div>
 
   <div class="header-actions">
-    <!-- Professional 2-Segment Slider (Light / Dark) -->
+    <!-- Theme Switcher -->
     <div class="pro-slider-container" onclick="handleSliderClick(event)" title="Slide to Switch Light / Dark Mode">
       <div class="pro-slider-pill"></div>
       <button class="pro-slider-btn btn-light-mode" onclick="setThemeDirect('light', event)">
@@ -900,6 +773,14 @@
       </button>
     </div>
 
+    <!-- Admin Only: Instagram Multi-Post Button -->
+    <button id="adminMultiShareBtn" class="btn-multi-share" onclick="openMultiShareDialog()" title="Generate Multi-Item Post for Instagram">
+      <span>📸 Insta Multi-Post</span>
+      <span id="selectedCountBadge" style="background:#ffffff; color:#e11d48; font-size:11px; padding:1px 6px; border-radius:10px;">0</span>
+    </button>
+
+    <button id="btnExitAdmin" class="btn-exit-admin" onclick="exitAdminMode()">Exit Admin</button>
+
     <button class="btn-cart" onclick="openCartModal()">
       <span>🛒 Quote Cart</span>
       <span class="cart-badge" id="cartCount">0</span>
@@ -908,6 +789,18 @@
 </header>
 
 <div class="container">
+
+  <!-- Multi-Selection Sticky Action Bar (Admin Only) -->
+  <div id="selectionBanner" class="selection-banner">
+    <div>
+      <strong id="selectedItemsText">0 items selected</strong>
+      <span style="font-size: 12px; opacity: 0.85; margin-left: 8px;">(Create an Instagram Post / Send selection)</span>
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button onclick="clearAllSelections()" style="padding:6px 12px; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:white; border-radius:4px; cursor:pointer;">Clear</button>
+      <button onclick="openMultiShareDialog()" style="padding:6px 14px; background:#e11d48; border:none; color:white; font-weight:bold; border-radius:4px; cursor:pointer;">📸 Generate Post</button>
+    </div>
+  </div>
 
   <!-- Catalog Subheader -->
   <div class="catalog-bar">
@@ -961,14 +854,14 @@
   </div>
 </div>
 
-<!-- AMAZON-STYLE RICH SHARE POPUP MODAL -->
+<!-- RICH SHARE POPUP MODAL (Single Item & Multi-Post) -->
 <div id="shareModal" class="modal" onclick="if(event.target.id === 'shareModal') closeShareModal()">
   <div class="share-modal-card">
     <button class="modal-close" onclick="closeShareModal()">✕</button>
-    <h3 style="font-size: 16px; font-weight: 700;">Share Material</h3>
+    <h3 id="shareModalHeading" style="font-size: 16px; font-weight: 700;">Share Material</h3>
 
-    <!-- Mini Product Preview Card -->
-    <div class="share-preview-box">
+    <!-- Preview Box -->
+    <div id="sharePreviewSingle" class="share-preview-box">
       <img id="sharePreviewImg" class="share-preview-thumb" src="" alt="Product Photo">
       <div style="overflow: hidden;">
         <div id="sharePreviewCode" style="font-size: 11px; font-weight: bold; color: var(--nav-accent); font-family: monospace;">CODE: --</div>
@@ -977,30 +870,36 @@
       </div>
     </div>
 
+    <!-- Multi-Items Selection Preview Box -->
+    <div id="sharePreviewMulti" class="share-preview-box" style="display:none; flex-direction:column; align-items:flex-start;">
+      <strong style="color:var(--text); font-size:13px;" id="multiCountLabel">Selected Items: 0</strong>
+      <div id="multiSelectedThumbs" style="display:flex; gap:6px; overflow-x:auto; width:100%; padding-top:6px;"></div>
+    </div>
+
     <!-- Share Destination Options -->
     <div class="share-options-grid">
-      <!-- 1. WhatsApp Direct Share -->
+      <!-- 1. Send via WhatsApp -->
       <button class="btn-share-option" onclick="shareToWhatsApp()">
         <svg viewBox="0 0 24 24" fill="#25D366"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zM12.05 20.21c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31c-.82-1.31-1.26-2.83-1.26-4.39 0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.23 8.24zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.17 1.74 2.65 4.21 3.71.59.25 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.1-.23-.17-.48-.29z"/></svg>
-        <span>Send WhatsApp</span>
+        <span>WhatsApp</span>
       </button>
 
-      <!-- 2. Download Photo Card to Post (Instagram / Status / LinkedIn) -->
+      <!-- 2. Save Instagram Photo Card -->
       <button class="btn-share-option" onclick="downloadProductPhotoCard()">
-        <svg viewBox="0 0 24 24" fill="#0078d4"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
-        <span>Save Photo Card</span>
+        <svg viewBox="0 0 24 24" fill="#E1306C"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        <span>Save Insta Card</span>
       </button>
 
-      <!-- 3. Copy Link with Photo Preview text -->
+      <!-- 3. Copy Link -->
       <button class="btn-share-option" onclick="copyShareLinkOnly()">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
         <span>Copy Link</span>
       </button>
 
-      <!-- 4. Native OS Post / Direct Message Share -->
+      <!-- 4. Post via Mobile Share Sheet -->
       <button class="btn-share-option" onclick="triggerNativeShareWithPhoto()">
         <svg viewBox="0 0 24 24" fill="var(--nav-accent)"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
-        <span>More Apps...</span>
+        <span>Post to Apps</span>
       </button>
     </div>
   </div>
@@ -1041,11 +940,9 @@
       <input type="tel" id="custPhone" placeholder="Phone Number / Mobile">
       
       <div class="submit-actions-row">
-        <!-- Direct Desktop Outlook / Default Email Client -->
         <button class="btn-submit-mail" onclick="submitQuoteEmail('app')">
           📧 Send via Outlook / Email App
         </button>
-        <!-- Direct Browser Outlook Web (Office 365) -->
         <button class="btn-submit-mail btn-submit-web-outlook" onclick="submitQuoteEmail('web')">
           🌐 Open in Outlook Web
         </button>
@@ -1054,22 +951,20 @@
   </div>
 </div>
 
-<!-- ABOUT US & REACHOUT FOOTER SECTION -->
+<!-- Footer Section -->
 <footer>
   <div class="footer-container">
-    <!-- Col 1: About Us -->
     <div class="footer-col">
       <h3>About Us</h3>
       <p>
         <strong>DOHA PROJECT TRADING SERVICES W.L.L</strong> is an <strong>ISO 9001:2015</strong>, <strong>ISO 14001:2015</strong>, and <strong>OHSAS 45001:2018</strong> certified leader in Qatar's oil and gas sector.
       </p>
       <p>
-        As a trusted supplier, we offer high-quality piping solutions including valves, pipes, fittings, fasteners, and gaskets from internationally recognized manufacturers, ensuring reliability for your projects.
+        As a trusted supplier, we offer high-quality piping solutions including valves, pipes, fittings, fasteners, and gaskets from internationally recognized manufacturers.
       </p>
       <div class="footer-cert-badge">✓ ISO 9001:2015 | ISO 14001:2015 | OHSAS 45001:2018 Certified</div>
     </div>
 
-    <!-- Col 2: Our Products -->
     <div class="footer-col">
       <h3>Our Products</h3>
       <ul class="footer-products-list">
@@ -1082,7 +977,6 @@
       </ul>
     </div>
 
-    <!-- Col 3: Reach Out -->
     <div class="footer-col">
       <h3>Reach Out</h3>
       <div class="contact-item">
@@ -1094,27 +988,19 @@
       </div>
       <div class="contact-item">
         <span>✉️</span>
-        <div>
-          <a href="mailto:sales@dohaprojects.com">sales@dohaprojects.com</a>
-        </div>
+        <div><a href="mailto:sales@dohaprojects.com">sales@dohaprojects.com</a></div>
       </div>
       <div class="contact-item">
         <span>📞</span>
-        <div>
-          <a href="tel:+97440052777">+974 4005 2777</a>
-        </div>
+        <div><a href="tel:+97440052777">+974 4005 2777</a></div>
       </div>
       <div class="contact-item">
         <span>🌐</span>
-        <div>
-          <a href="https://www.dohaprojects.com" target="_blank">www.dohaprojects.com</a>
-        </div>
+        <div><a href="https://www.dohaprojects.com" target="_blank">www.dohaprojects.com</a></div>
       </div>
       <div class="contact-item">
         <span>⏰</span>
-        <div>
-          Sat – Thu: <strong>7:30 AM – 05:00 PM</strong>
-        </div>
+        <div>Sat – Thu: <strong>7:30 AM – 05:00 PM</strong></div>
       </div>
     </div>
   </div>
@@ -1126,11 +1012,11 @@
 
 <script>
   const COMPANY_EMAIL = "sales@dohaprojects.com";
-
-  // ================= LIVE GOOGLE SHEET CSV FEED =================
+  const ADMIN_PIN = "Jesus07dp";
   const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1PyNtiW0wxCtb3hOAr_kdxiEHDAPJbzwP/gviz/tq?tqx=out:csv";
 
-  // Dynamic Theme-Aware SVG Placeholder
+  let isAdmin = false;
+
   function getPlaceholderSVG() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const bg = isDark ? '%23000000' : '%23ffffff';
@@ -1139,7 +1025,6 @@
     return `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200' width='200' height='200'><rect width='200' height='200' fill='${bg}'/><path d='M70 70h60v60H70z' fill='${icon}'/><circle cx='85' cy='85' r='6' fill='${fg}'/><path d='M75 125l20-25 15 18 20-23 15 30H75z' fill='${fg}'/><text x='100' y='160' fill='${fg}' font-family='Arial,sans-serif' font-size='12' font-weight='bold' text-anchor='middle'>NO IMAGE</text></svg>`;
   }
 
-  // ================= 2-SEGMENT SLIDING PILL SWITCH LOGIC =================
   function handleSliderClick(event) {
     const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
     const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -1155,28 +1040,12 @@
     if (document.startViewTransition) {
       const x = event && event.clientX ? event.clientX : window.innerWidth - 80;
       const y = event && event.clientY ? event.clientY : 30;
-      const endRadius = Math.hypot(
-        Math.max(x, window.innerWidth - x),
-        Math.max(y, window.innerHeight - y)
-      );
+      const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
 
-      const transition = document.startViewTransition(() => {
-        applyTheme(nextTheme);
-      });
-
+      const transition = document.startViewTransition(() => { applyTheme(nextTheme); });
       transition.ready.then(() => {
-        const clipPath = [
-          `circle(0px at ${x}px ${y}px)`,
-          `circle(${endRadius}px at ${x}px ${y}px)`
-        ];
-        document.documentElement.animate(
-          { clipPath: clipPath },
-          {
-            duration: 650,
-            easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-            pseudoElement: '::view-transition-new(root)'
-          }
-        );
+        const clipPath = [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`];
+        document.documentElement.animate({ clipPath: clipPath }, { duration: 650, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', pseudoElement: '::view-transition-new(root)' });
       });
     } else {
       applyTheme(nextTheme);
@@ -1191,22 +1060,15 @@
   function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('doha_app_theme', theme);
-    if (inventory && inventory.length > 0) {
-      renderCatalog();
-    }
+    if (inventory && inventory.length > 0) renderCatalog();
   }
 
-  // Formats any raw code to a strict 6-digit numeric string
   function formatSixDigitCode(code) {
     if (code === undefined || code === null) return "000000";
     let str = String(code).trim().replace(/\.0$/, '');
-    if (/^\d+$/.test(str)) {
-      return str.padStart(6, '0');
-    }
-    return str;
+    return /^\d+$/.test(str) ? str.padStart(6, '0') : str;
   }
 
-  // Broad Category Fallback Images
   const commonCategoryImages = {
     'Pipes': 'images/pipe (1).png',
     'Fittings': 'images/fittings2.png',
@@ -1216,7 +1078,6 @@
     'Other Products': 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=500&auto=format&fit=crop&q=60'
   };
 
-  // Description Prefix / Keyword Global Image Rules
   const descriptionPrefixImages = {
     'NIPPLE PIPE': 'images/NIPPLE.webp',
     'NIPPLE HEX': 'images/NIPPLE.webp',
@@ -1271,49 +1132,14 @@
   let currentVisibleCount = ITEMS_PER_PAGE;
   let activeFilteredList = [];
 
-  // ================= EXACT 5-CATEGORY CLASSIFICATION ENGINE =================
   function detectCategory(name) {
     const n = String(name || '').replace(/[\u00a0\s]+/g, ' ').trim().toUpperCase();
-
-    // 1. Valves
-    if (n.includes('VALVE') || n.includes('VLV') || n.includes('GATE') || n.includes('GLOBE') || 
-        n.includes('BUTTERFLY') || n.includes('ACTUATOR') || n.includes('NEEDLE')) {
-      return 'Valves';
-    }
-    if ((n.includes('CHECK') || n.includes('BALL') || n.includes('PLUG')) && 
-        (n.includes('CLASS') || n.includes('BODY') || n.includes('TRIM') || n.includes('CS') || n.includes('SS') || n.includes('WOG'))) {
-      return 'Valves';
-    }
-
-    // 2. Pipes
-    if ((n.includes('PIPE') || n.includes('TUBE') || n.includes('CASING') || n.includes('SMLS') || n.includes('ERW')) && 
-        !n.includes('NIPPLE') && !n.includes('FITTING') && !n.includes('CLAMP') && !n.includes('PLUG') && !n.includes('CUTTER')) {
-      return 'Pipes';
-    }
-
-    // 3. Flanges
-    if (n.includes('FLANGE') || n.includes('FLG') || n.includes('SPADE BLIND') || n.includes('SPECTACLE BLIND') || n.includes('BLIND SPADE')) {
-      return 'Flanges';
-    }
-
-    // 4. Fasteners & Gaskets
-    if (n.includes('GASKET') || n.includes('GSK') || n.includes('FASTENER') || n.includes('STUD') || 
-        n.includes('BOLT') || n.includes('NUT') || n.includes('WASHER') || n.includes('CLAMP') || 
-        n.includes('SCREW') || n.includes('ANCHOR') || n.includes('U-BOLT') || n.includes('U BOLT')) {
-      return 'Fasteners & Gaskets';
-    }
-
-    // 5. Fittings
-    if (n.includes('ELBOW') || n.includes('NIPPLE') || n.includes('COUPLING') || n.includes('UNION') || 
-        n.includes('REDUCER') || n.includes('TEE') || n.includes('CAP') || 
-        n.includes('BUSH') || n.includes('BUSHING') || n.includes('OLET') || n.includes('SOCKOLET') || 
-        n.includes('WELDOLET') || n.includes('THREADOLET') || n.includes('ELBOLET') || n.includes('FERRULE') || 
-        n.includes('ADAPTOR') || n.includes('CONNECTOR') || n.includes('CROSS') || n.includes('BEND') || n.includes('BOSS') ||
-        n.includes('PLUG HEX') || n.includes('PLUG ROUND') || n.includes('PLUG SQUARE') || n.includes('BAR THREAD') || n.includes('HEX PLUG')) {
-      return 'Fittings';
-    }
-
-    // 6. Other Products
+    if (n.includes('VALVE') || n.includes('VLV') || n.includes('GATE') || n.includes('GLOBE') || n.includes('BUTTERFLY') || n.includes('ACTUATOR') || n.includes('NEEDLE')) return 'Valves';
+    if ((n.includes('CHECK') || n.includes('BALL') || n.includes('PLUG')) && (n.includes('CLASS') || n.includes('BODY') || n.includes('TRIM') || n.includes('CS') || n.includes('SS') || n.includes('WOG'))) return 'Valves';
+    if ((n.includes('PIPE') || n.includes('TUBE') || n.includes('CASING') || n.includes('SMLS') || n.includes('ERW')) && !n.includes('NIPPLE') && !n.includes('FITTING') && !n.includes('CLAMP') && !n.includes('PLUG') && !n.includes('CUTTER')) return 'Pipes';
+    if (n.includes('FLANGE') || n.includes('FLG') || n.includes('SPADE BLIND') || n.includes('SPECTACLE BLIND') || n.includes('BLIND SPADE')) return 'Flanges';
+    if (n.includes('GASKET') || n.includes('GSK') || n.includes('FASTENER') || n.includes('STUD') || n.includes('BOLT') || n.includes('NUT') || n.includes('WASHER') || n.includes('CLAMP') || n.includes('SCREW') || n.includes('ANCHOR') || n.includes('U-BOLT') || n.includes('U BOLT')) return 'Fasteners & Gaskets';
+    if (n.includes('ELBOW') || n.includes('NIPPLE') || n.includes('COUPLING') || n.includes('UNION') || n.includes('REDUCER') || n.includes('TEE') || n.includes('CAP') || n.includes('BUSH') || n.includes('BUSHING') || n.includes('OLET') || n.includes('SOCKOLET') || n.includes('WELDOLET') || n.includes('THREADOLET') || n.includes('ELBOLET') || n.includes('FERRULE') || n.includes('ADAPTOR') || n.includes('CONNECTOR') || n.includes('CROSS') || n.includes('BEND') || n.includes('BOSS') || n.includes('PLUG HEX') || n.includes('PLUG ROUND') || n.includes('PLUG SQUARE') || n.includes('BAR THREAD') || n.includes('HEX PLUG')) return 'Fittings';
     return 'Other Products';
   }
 
@@ -1334,19 +1160,58 @@
   });
 
   let cart = [];
+  let selectedItemsForPost = new Set();
   let activeModalItem = null;
   let activeShareItem = null;
+  let isMultiPostMode = false;
 
-  function handleLogoFallback(imgElement) {
-    imgElement.onerror = null;
-    if (imgElement.src.includes('images/dp1.png')) {
-      imgElement.src = 'dp1.png';
-    } else {
-      imgElement.style.display = 'none';
+  // ================= SECRET ADMIN LOGIN / TOGGLE =================
+  let clickCount = 0;
+  let clickTimer = null;
+  document.getElementById('secretLogoTrigger').addEventListener('click', () => {
+    clickCount++;
+    if (clickCount === 1) {
+      clickTimer = setTimeout(() => { clickCount = 0; }, 600);
+    } else if (clickCount === 3) {
+      clearTimeout(clickTimer);
+      clickCount = 0;
+      promptAdminLogin();
+    }
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
+      e.preventDefault();
+      promptAdminLogin();
+    }
+  });
+
+  function promptAdminLogin() {
+    if (isAdmin) {
+      exitAdminMode();
+      return;
+    }
+    const pin = prompt("Enter Master PIN to access Admin Post Mode:");
+    if (pin === ADMIN_PIN) {
+      isAdmin = true;
+      document.getElementById('adminMultiShareBtn').style.display = 'flex';
+      document.getElementById('btnExitAdmin').style.display = 'block';
+      renderCatalog();
+      alert("✓ Admin Mode Active: You can now select items and generate Instagram Multi-Posts.");
+    } else if (pin !== null) {
+      alert("Unauthorized Access.");
     }
   }
 
-  // ================= AUTO-LOAD FROM LIVE GOOGLE SHEET =================
+  function exitAdminMode() {
+    isAdmin = false;
+    document.getElementById('adminMultiShareBtn').style.display = 'none';
+    document.getElementById('btnExitAdmin').style.display = 'none';
+    clearAllSelections();
+    renderCatalog();
+    alert("Exited Admin Mode.");
+  }
+
   async function loadPublicStockFile() {
     try {
       const fetchUrl = `${GOOGLE_SHEET_CSV_URL}&_t=${Date.now()}`;
@@ -1362,14 +1227,13 @@
         const parsedItems = [];
         rows.forEach(row => {
           const cleanRow = {};
-          Object.keys(row).forEach(k => {
-            cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k];
-          });
+          Object.keys(row).forEach(k => { cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k]; });
 
           const rawCode = cleanRow['item code'] || cleanRow['code'] || cleanRow['item no'] || cleanRow['part no'] || '';
           const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['item desc'] || cleanRow['name'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
           const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || cleanRow['balance qty'] || 0);
           const unit = String(cleanRow['unit'] || cleanRow['uom'] || 'NOS').trim();
+          const imgUrl = cleanRow['image'] || cleanRow['image url'] || cleanRow['photo'] || cleanRow['img'] || '';
 
           if (rawCode && name) {
             parsedItems.push({
@@ -1377,7 +1241,8 @@
               name: name,
               category: detectCategory(name),
               qty: isNaN(stock) ? 0 : stock,
-              unit: unit
+              unit: unit,
+              image: imgUrl
             });
           }
         });
@@ -1393,8 +1258,8 @@
     }
   }
 
-  // Hierarchical Image Matcher
   function getItemImage(item) {
+    if (item.image && item.image.trim() !== '') return item.image.trim();
     const upperName = String(item.name || '').replace(/[\u00a0\s]+/g, ' ').trim().toUpperCase();
 
     const sortedRules = Object.keys(descriptionPrefixImages).sort((a, b) => {
@@ -1406,38 +1271,39 @@
     for (const rule of sortedRules) {
       const cleanRule = rule.replace(/[\u00a0\s]+/g, ' ').trim().toUpperCase();
       const ruleWords = cleanRule.split(/\s+/).filter(w => w.length > 0);
-
-      const allWordsMatch = ruleWords.every(word => upperName.includes(word));
-
-      if (allWordsMatch) {
-        return descriptionPrefixImages[rule];
-      }
+      if (ruleWords.every(word => upperName.includes(word))) return descriptionPrefixImages[rule];
     }
 
-    if (commonCategoryImages[item.category]) {
-      return commonCategoryImages[item.category];
-    }
-
+    if (commonCategoryImages[item.category]) return commonCategoryImages[item.category];
     return commonCategoryImages['Other Products'] || getPlaceholderSVG();
   }
 
   function handleImageFallback(imgElement, category) {
-    imgElement.onerror = null;
+    const rawSrc = decodeURIComponent(imgElement.getAttribute('src') || '');
+    let attempts = parseInt(imgElement.getAttribute('data-fail-count') || '0', 10);
+    attempts++;
+    imgElement.setAttribute('data-fail-count', attempts);
 
-    const currentSrc = imgElement.getAttribute('src') || '';
-    if (currentSrc.startsWith('images/')) {
-      const rootPath = currentSrc.replace('images/', '');
-      const testImg = new Image();
-      testImg.onload = function() { imgElement.src = rootPath; };
-      testImg.onerror = function() {
-        imgElement.src = commonCategoryImages[category] || getPlaceholderSVG();
-      };
-      testImg.src = rootPath;
-    } else if (commonCategoryImages[category] && currentSrc !== commonCategoryImages[category]) {
-      imgElement.src = commonCategoryImages[category];
-    } else {
-      imgElement.src = getPlaceholderSVG();
+    if (attempts === 1) {
+      if (rawSrc.startsWith('images/')) { imgElement.src = rawSrc.replace(/^images\//, ''); return; }
+      if (!rawSrc.includes('/') && !rawSrc.startsWith('http')) { imgElement.src = 'images/' + rawSrc; return; }
+    } else if (attempts === 2) {
+      if (rawSrc.endsWith('.png')) { imgElement.src = rawSrc.replace('.png', '.webp'); return; }
+      else if (rawSrc.endsWith('.webp')) { imgElement.src = rawSrc.replace('.webp', '.jpg'); return; }
+    } else if (attempts === 3) {
+      if (commonCategoryImages[category] && rawSrc !== commonCategoryImages[category]) { imgElement.src = commonCategoryImages[category]; return; }
     }
+
+    imgElement.onerror = null;
+    imgElement.src = getPlaceholderSVG();
+  }
+
+  function handleLogoFallback(imgElement) {
+    let attempts = parseInt(imgElement.getAttribute('data-fail-count') || '0', 10);
+    attempts++;
+    imgElement.setAttribute('data-fail-count', attempts);
+    if (attempts === 1) imgElement.src = 'dp1.png';
+    else { imgElement.onerror = null; imgElement.style.display = 'none'; }
   }
 
   function filterByFooterCategory(catName) {
@@ -1446,20 +1312,99 @@
     resetAndRender();
   }
 
-  // ================= AMAZON-STYLE RICH SHARE ENGINE WITH PHOTO & LINK =================
-  function shareDirectItem(itemCode, evt) {
-    if (evt) {
-      evt.preventDefault();
-      evt.stopPropagation();
+  // ================= MULTI-SELECTION (ADMIN ONLY) =================
+  function toggleItemSelection(code, evt) {
+    evt.stopPropagation();
+    if (selectedItemsForPost.has(code)) {
+      selectedItemsForPost.delete(code);
+    } else {
+      if (selectedItemsForPost.size >= 6) {
+        alert("You can select up to 6 materials in one Instagram collage post.");
+        evt.target.checked = false;
+        return;
+      }
+      selectedItemsForPost.add(code);
     }
+    updateSelectionUI();
+  }
 
+  function updateSelectionUI() {
+    const count = selectedItemsForPost.size;
+    document.getElementById('selectedCountBadge').innerText = count;
+    const banner = document.getElementById('selectionBanner');
+    if (isAdmin && count > 0) {
+      banner.classList.add('active');
+      document.getElementById('selectedItemsText').innerText = `${count} material(s) selected`;
+    } else {
+      banner.classList.remove('active');
+    }
+  }
+
+  function clearAllSelections() {
+    selectedItemsForPost.clear();
+    updateSelectionUI();
+    document.querySelectorAll('.item-select-checkbox').forEach(cb => cb.checked = false);
+  }
+
+  function openMultiShareDialog() {
+    if (!isAdmin) return;
+    if (selectedItemsForPost.size === 0) {
+      alert("Please select 1 to 6 materials using the checkboxes on each card first.");
+      return;
+    }
+    isMultiPostMode = true;
+    activeShareItem = null;
+
+    document.getElementById('shareModalHeading').innerText = "📸 Instagram Multi-Item Post";
+    document.getElementById('sharePreviewSingle').style.display = 'none';
+    document.getElementById('sharePreviewMulti').style.display = 'flex';
+    document.getElementById('multiCountLabel').innerText = `Selected Materials (${selectedItemsForPost.size}):`;
+
+    const thumbsContainer = document.getElementById('multiSelectedThumbs');
+    thumbsContainer.innerHTML = '';
+    selectedItemsForPost.forEach(code => {
+      const item = inventory.find(i => i.code === code);
+      if (item) {
+        thumbsContainer.innerHTML += `
+          <div style="text-align:center; min-width:60px;">
+            <img src="${getItemImage(item)}" style="width:50px; height:50px; object-fit:contain; background:#fff; border-radius:4px; border:1px solid var(--border);" onerror="handleImageFallback(this, '${item.category}')">
+            <div style="font-size:10px; font-weight:bold; font-family:monospace;">${item.code}</div>
+          </div>
+        `;
+      }
+    });
+
+    document.getElementById('shareModal').classList.add('open');
+  }
+
+  function loadImageElementClean(src) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = () => resolve(img);
+      img.onerror = () => {
+        const placeholderImg = new Image();
+        placeholderImg.onload = () => resolve(placeholderImg);
+        placeholderImg.src = getPlaceholderSVG();
+      };
+      img.src = src;
+    });
+  }
+
+  // ================= AMAZON-STYLE SINGLE & MULTI-ITEM SHARE ENGINE =================
+  function shareDirectItem(itemCode, evt) {
+    if (evt) { evt.preventDefault(); evt.stopPropagation(); }
     const formattedCode = formatSixDigitCode(itemCode);
     const item = inventory.find(i => i.code === formattedCode);
     if (!item) return;
 
+    isMultiPostMode = false;
     activeShareItem = item;
 
-    // Open Amazon-Style Rich Share Dialog
+    document.getElementById('shareModalHeading').innerText = "Share Material";
+    document.getElementById('sharePreviewMulti').style.display = 'none';
+    document.getElementById('sharePreviewSingle').style.display = 'flex';
+
     document.getElementById('sharePreviewImg').src = getItemImage(item);
     document.getElementById('sharePreviewCode').innerText = `ITEM CODE: ${item.code}`;
     document.getElementById('sharePreviewTitle').innerText = item.name;
@@ -1471,6 +1416,7 @@
   function closeShareModal() {
     document.getElementById('shareModal').classList.remove('open');
     activeShareItem = null;
+    isMultiPostMode = false;
   }
 
   function getItemShareUrl(item) {
@@ -1479,79 +1425,58 @@
     return cleanUrl;
   }
 
-  // 1. Direct WhatsApp Share with formatted details and link
   function shareToWhatsApp() {
-    if (!activeShareItem) return;
-    const item = activeShareItem;
-    const url = getItemShareUrl(item);
-
-    const messageText = 
-`📦 *Doha Project Stocks - Material Details*
-----------------------------------------
-*Item Code:* ${item.code}
-*Description:* ${item.name}
-*Category:* ${item.category}
-*Stock:* ${item.qty > 0 ? `${item.qty} ${item.unit || 'NOS'} (Available)` : 'Out of Stock'}
-
-🔗 *View Catalog & Request RFQ:*
-${url}`;
-
-    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(messageText)}`;
-    window.open(waUrl, '_blank');
+    let messageText = "";
+    if (isMultiPostMode) {
+      const items = Array.from(selectedItemsForPost).map(code => inventory.find(i => i.code === code)).filter(Boolean);
+      messageText = `📦 *Doha Project Stocks - Selected Materials Summary*\n----------------------------------------\n`;
+      items.forEach((item, idx) => {
+        messageText += `*${idx + 1}. [${item.code}]* ${item.name}\nStock: ${item.qty > 0 ? `${item.qty} ${item.unit || 'NOS'}` : 'Out of Stock'}\n\n`;
+      });
+      messageText += `🔗 *View Catalog & Request RFQ:* ${window.location.href.split('?')[0]}`;
+    } else if (activeShareItem) {
+      const item = activeShareItem;
+      messageText = `📦 *Doha Project Stocks - Material Details*\n----------------------------------------\n*Item Code:* ${item.code}\n*Description:* ${item.name}\n*Category:* ${item.category}\n*Stock:* ${item.qty > 0 ? `${item.qty} ${item.unit || 'NOS'} (Available)` : 'Out of Stock'}\n\n🔗 *View Material Online:* ${getItemShareUrl(item)}`;
+    }
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(messageText)}`, '_blank');
   }
 
-  // 2. Generate and Download Visual Shareable Card (For Instagram/LinkedIn/Posts)
   async function downloadProductPhotoCard() {
-    if (!activeShareItem) return;
-    const item = activeShareItem;
-
-    const canvas = await generateBrandedShareCanvas(item);
+    const canvas = isMultiPostMode ? await generateMultiItemInstagramCanvas() : await generateSingleItemShareCanvas(activeShareItem);
     const imageURI = canvas.toDataURL("image/png");
-    
     const link = document.createElement("a");
-    link.download = `DohaProject_${item.code}.png`;
+    link.download = isMultiPostMode ? `DohaProject_InstaPost.png` : `DohaProject_${activeShareItem.code}.png`;
     link.href = imageURI;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   }
 
-  // 3. Copy Link to Clipboard
   function copyShareLinkOnly() {
-    if (!activeShareItem) return;
-    const url = getItemShareUrl(activeShareItem);
-    
+    const url = (isMultiPostMode || !activeShareItem) ? window.location.href.split('?')[0] : getItemShareUrl(activeShareItem);
     if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(url).then(() => {
-        alert("✓ Material link copied to clipboard!\n\n" + url);
-      }).catch(() => legacyClipboardCopy(url));
+      navigator.clipboard.writeText(url).then(() => { alert("✓ Link copied to clipboard!\n\n" + url); }).catch(() => legacyClipboardCopy(url));
     } else {
       legacyClipboardCopy(url);
     }
   }
 
-  // 4. Native OS Share Sheet with Photo File (Mobile Safari / Chrome)
   async function triggerNativeShareWithPhoto() {
-    if (!activeShareItem) return;
-    const item = activeShareItem;
-    const url = getItemShareUrl(item);
-
     try {
-      const canvas = await generateBrandedShareCanvas(item);
+      const canvas = isMultiPostMode ? await generateMultiItemInstagramCanvas() : await generateSingleItemShareCanvas(activeShareItem);
       canvas.toBlob(async (blob) => {
-        const file = new File([blob], `${item.code}.png`, { type: 'image/png' });
-        
+        const filename = isMultiPostMode ? `DohaProject_Materials.png` : `${activeShareItem.code}.png`;
+        const file = new File([blob], filename, { type: 'image/png' });
+        const shareUrl = isMultiPostMode ? window.location.href.split('?')[0] : getItemShareUrl(activeShareItem);
+
         const shareData = {
-          title: `[${item.code}] ${item.name}`,
-          text: `Check stock for [${item.code}] ${item.name} at Doha Project Stocks Qatar:\n${url}`,
-          url: url
+          title: isMultiPostMode ? "Doha Project Materials Selection" : `[${activeShareItem.code}] ${activeShareItem.name}`,
+          text: isMultiPostMode ? `Check Doha Project Stocks Qatar:\n${shareUrl}` : `Check stock for [${activeShareItem.code}] ${activeShareItem.name}:\n${shareUrl}`,
+          url: shareUrl
         };
 
         if (navigator.canShare && navigator.canShare({ files: [file] })) {
-          await navigator.share({
-            ...shareData,
-            files: [file]
-          });
+          await navigator.share({ ...shareData, files: [file] });
         } else if (navigator.share) {
           await navigator.share(shareData);
         } else {
@@ -1559,116 +1484,156 @@ ${url}`;
         }
       });
     } catch (err) {
-      if (err.name !== 'AbortError') {
-        copyShareLinkOnly();
-      }
+      if (err.name !== 'AbortError') copyShareLinkOnly();
     }
   }
 
-  // Canvas Generator for Branded Material Share Card (600x700px)
-  function generateBrandedShareCanvas(item) {
-    return new Promise((resolve) => {
-      const canvas = document.createElement("canvas");
-      canvas.width = 600;
-      canvas.height = 700;
-      const ctx = canvas.getContext("2d");
+  // 1. Single Item Canvas (600x700px)
+  async function generateSingleItemShareCanvas(item) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 600;
+    canvas.height = 700;
+    const ctx = canvas.getContext("2d");
 
-      // Card Background
-      ctx.fillStyle = "#ffffff";
-      ctx.fillRect(0, 0, 600, 700);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, 600, 700);
 
-      // Header Banner (Doha Brand Dark Blue)
-      ctx.fillStyle = "#131921";
-      ctx.fillRect(0, 0, 600, 70);
+    ctx.fillStyle = "#131921";
+    ctx.fillRect(0, 0, 600, 75);
+    ctx.fillStyle = "#fcb212";
+    ctx.font = "bold 20px Arial";
+    ctx.fillText("DOHA PROJECT STOCKS", 24, 34);
+    ctx.fillStyle = "#9ca3af";
+    ctx.font = "bold 11px Arial";
+    ctx.fillText("INDUSTRIAL CATALOG & RFQ PORTAL • QATAR", 24, 56);
 
-      // Header Logo / Text
-      ctx.fillStyle = "#fcb212";
-      ctx.font = "bold 18px -apple-system, Arial, sans-serif";
-      ctx.fillText("DOHA PROJECT STOCKS", 24, 34);
-      ctx.fillStyle = "#9ca3af";
-      ctx.font = "bold 11px -apple-system, Arial, sans-serif";
-      ctx.fillText("INDUSTRIAL CATALOG & RFQ PORTAL • QATAR", 24, 52);
+    ctx.fillStyle = "#f8fafc";
+    ctx.fillRect(24, 95, 552, 340);
+    ctx.strokeStyle = "#e2e8f0";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(24, 95, 552, 340);
 
-      // Product Photo Box
+    const img = await loadImageElementClean(getItemImage(item));
+    const aspect = img.width / img.height;
+    let drawW = 320;
+    let drawH = 320 / aspect;
+    if (drawH > 320) { drawH = 320; drawW = 320 * aspect; }
+    ctx.drawImage(img, 24 + (552 - drawW) / 2, 95 + (340 - drawH) / 2, drawW, drawH);
+
+    ctx.fillStyle = "#2563eb";
+    ctx.font = "bold 14px monospace";
+    ctx.fillText(`ITEM CODE: ${item.code}`, 24, 470);
+
+    ctx.fillStyle = "#64748b";
+    ctx.font = "bold 12px Arial";
+    ctx.fillText(item.category.toUpperCase(), 24, 492);
+
+    ctx.fillStyle = "#0f1111";
+    ctx.font = "bold 17px Arial";
+    const words = item.name.split(" ");
+    let line1 = "", line2 = "";
+    for (let n = 0; n < words.length; n++) {
+      const test = line1 + words[n] + " ";
+      if (ctx.measureText(test).width < 540 && line2 === "") line1 = test;
+      else line2 += words[n] + " ";
+    }
+    ctx.fillText(line1.trim(), 24, 520);
+    if (line2) ctx.fillText(line2.trim(), 24, 545);
+
+    ctx.fillStyle = item.qty > 0 ? "#007600" : "#b12704";
+    ctx.font = "bold 16px Arial";
+    ctx.fillText(item.qty > 0 ? `✓ In Stock: ${item.qty} ${item.unit || 'NOS'}` : '❌ Out of Stock', 24, 590);
+
+    ctx.fillStyle = "#f1f5f9";
+    ctx.fillRect(0, 630, 600, 70);
+    ctx.fillStyle = "#131921";
+    ctx.font = "bold 12px Arial";
+    ctx.fillText("Request Price & Availability:", 24, 658);
+    ctx.fillStyle = "#0078d4";
+    ctx.font = "bold 13px Arial";
+    ctx.fillText(getItemShareUrl(item), 24, 680);
+
+    return canvas;
+  }
+
+  // 2. Multi-Item Instagram Collage (1080x1080px)
+  async function generateMultiItemInstagramCanvas() {
+    const items = Array.from(selectedItemsForPost).map(code => inventory.find(i => i.code === code)).filter(Boolean);
+    const canvas = document.createElement("canvas");
+    canvas.width = 1080;
+    canvas.height = 1080;
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, 1080, 1080);
+
+    ctx.fillStyle = "#131921";
+    ctx.fillRect(0, 0, 1080, 110);
+    ctx.fillStyle = "#fcb212";
+    ctx.font = "bold 32px Arial";
+    ctx.fillText("DOHA PROJECT TRADING SERVICES W.L.L", 40, 52);
+    ctx.fillStyle = "#9ca3af";
+    ctx.font = "bold 16px Arial";
+    ctx.fillText("CURRENT IN-STOCK INDUSTRIAL PIPING & FITTINGS CATALOG", 40, 88);
+
+    const count = items.length;
+    let cols = count > 1 ? (count > 4 ? 3 : 2) : 1;
+    let rows = Math.ceil(count / cols);
+
+    const cellW = (1000 - (cols - 1) * 20) / cols;
+    const cellH = (840 - (rows - 1) * 20) / rows;
+
+    for (let i = 0; i < count; i++) {
+      const itm = items[i];
+      const c = i % cols;
+      const r = Math.floor(i / cols);
+      const x = 40 + c * (cellW + 20);
+      const y = 130 + r * (cellH + 20);
+
       ctx.fillStyle = "#f8fafc";
-      ctx.fillRect(24, 90, 552, 340);
+      ctx.fillRect(x, y, cellW, cellH);
       ctx.strokeStyle = "#e2e8f0";
       ctx.lineWidth = 2;
-      ctx.strokeRect(24, 90, 552, 340);
+      ctx.strokeRect(x, y, cellW, cellH);
 
-      const prodImg = new Image();
-      prodImg.crossOrigin = "anonymous";
-      prodImg.onload = function() {
-        // Draw centered product image
-        const aspect = prodImg.width / prodImg.height;
-        let drawW = 300;
-        let drawH = 300 / aspect;
-        if (drawH > 300) {
-          drawH = 300;
-          drawW = 300 * aspect;
+      const img = await loadImageElementClean(getItemImage(itm));
+      const imgBoxH = cellH * 0.58;
+      const aspect = img.width / img.height;
+      let drawW = cellW * 0.8;
+      let drawH = drawW / aspect;
+      if (drawH > imgBoxH) { drawH = imgBoxH; drawW = imgBoxH * aspect; }
+      ctx.drawImage(img, x + (cellW - drawW) / 2, y + 10 + (imgBoxH - drawH) / 2, drawW, drawH);
+
+      ctx.fillStyle = "#2563eb";
+      ctx.font = "bold 14px monospace";
+      ctx.fillText(`CODE: ${itm.code}`, x + 12, y + imgBoxH + 24);
+
+      ctx.fillStyle = "#0f1111";
+      ctx.font = "bold 13px Arial";
+      let shortTitle = itm.name;
+      if (ctx.measureText(shortTitle).width > cellW - 24) {
+        while (ctx.measureText(shortTitle + '...').width > cellW - 24 && shortTitle.length > 5) {
+          shortTitle = shortTitle.substring(0, shortTitle.length - 1);
         }
-        const drawX = 24 + (552 - drawW) / 2;
-        const drawY = 90 + (340 - drawH) / 2;
-        ctx.drawImage(prodImg, drawX, drawY, drawW, drawH);
-        renderCardText();
-      };
-      prodImg.onerror = function() {
-        ctx.fillStyle = "#64748b";
-        ctx.font = "bold 16px Arial";
-        ctx.textAlign = "center";
-        ctx.fillText("INDUSTRIAL MATERIAL", 300, 260);
-        ctx.textAlign = "start";
-        renderCardText();
-      };
-      prodImg.src = getItemImage(item);
-
-      function renderCardText() {
-        // Item Code Badge
-        ctx.fillStyle = "#2563eb";
-        ctx.font = "bold 13px monospace";
-        ctx.fillText(`ITEM CODE: ${item.code}`, 24, 465);
-
-        // Category
-        ctx.fillStyle = "#64748b";
-        ctx.font = "bold 12px Arial";
-        ctx.fillText(item.category.toUpperCase(), 24, 485);
-
-        // Product Name (wrapped up to 2 lines)
-        ctx.fillStyle = "#0f1111";
-        ctx.font = "bold 17px Arial";
-        const words = item.name.split(" ");
-        let line1 = "";
-        let line2 = "";
-        for (let n = 0; n < words.length; n++) {
-          const testLine = line1 + words[n] + " ";
-          if (ctx.measureText(testLine).width < 540 && line2 === "") {
-            line1 = testLine;
-          } else {
-            line2 += words[n] + " ";
-          }
-        }
-        ctx.fillText(line1.trim(), 24, 515);
-        if (line2) ctx.fillText(line2.trim(), 24, 538);
-
-        // Stock Status Pill
-        const isOk = item.qty > 0;
-        ctx.fillStyle = isOk ? "#007600" : "#b12704";
-        ctx.font = "bold 15px Arial";
-        ctx.fillText(isOk ? `✓ In Stock: ${item.qty} ${item.unit || 'NOS'}` : '❌ Out of Stock', 24, 580);
-
-        // Bottom Footer Bar with Direct Link Tag
-        ctx.fillStyle = "#f1f5f9";
-        ctx.fillRect(0, 630, 600, 70);
-        ctx.fillStyle = "#131921";
-        ctx.font = "bold 13px Arial";
-        ctx.fillText("Request Price & Availability Online:", 24, 658);
-        ctx.fillStyle = "#0078d4";
-        ctx.font = "bold 13px Arial";
-        ctx.fillText(getItemShareUrl(item), 24, 680);
-
-        resolve(canvas);
+        shortTitle += '...';
       }
-    });
+      ctx.fillText(shortTitle, x + 12, y + imgBoxH + 46);
+
+      ctx.fillStyle = itm.qty > 0 ? "#007600" : "#b12704";
+      ctx.font = "bold 13px Arial";
+      ctx.fillText(itm.qty > 0 ? `✓ Stock: ${itm.qty} ${itm.unit || 'NOS'}` : 'Out of Stock', x + 12, y + imgBoxH + 68);
+    }
+
+    ctx.fillStyle = "#f1f5f9";
+    ctx.fillRect(0, 990, 1080, 90);
+    ctx.fillStyle = "#131921";
+    ctx.font = "bold 18px Arial";
+    ctx.fillText("Order / Inquiry Online: www.dohaprojects.com", 40, 1042);
+    ctx.fillStyle = "#0078d4";
+    ctx.font = "bold 16px Arial";
+    ctx.fillText("Contact Sales: sales@dohaprojects.com | +974 4005 2777", 450, 1042);
+
+    return canvas;
   }
 
   function legacyClipboardCopy(text) {
@@ -1677,24 +1642,18 @@ ${url}`;
       tempTextArea.value = text;
       tempTextArea.style.position = "fixed";
       tempTextArea.style.left = "-999999px";
-      tempTextArea.style.top = "-999999px";
       document.body.appendChild(tempTextArea);
       tempTextArea.focus();
       tempTextArea.select();
-      const successful = document.execCommand('copy');
+      document.execCommand('copy');
       document.body.removeChild(tempTextArea);
-
-      if (successful) {
-        alert("✓ Material link copied to clipboard!\n\n" + text);
-      } else {
-        prompt("Copy direct link below (Ctrl+C / Cmd+C):", text);
-      }
+      alert("✓ Link copied to clipboard!\n\n" + text);
     } catch (err) {
-      prompt("Copy direct link below (Ctrl+C / Cmd+C):", text);
+      prompt("Copy link below:", text);
     }
   }
 
-  // ================= CATALOG RENDER & WORD-BY-WORD SEARCH =================
+  // ================= CATALOG RENDER =================
   function resetAndRender() {
     currentVisibleCount = ITEMS_PER_PAGE;
     renderCatalog();
@@ -1716,12 +1675,10 @@ ${url}`;
     activeFilteredList = inventory.filter(item => {
       const matchCat = (cat === 'All' || item.category === cat);
       if (!matchCat) return false;
-
       if (searchTerms.length === 0) return true;
 
       const rawCode = item.code.replace(/^0+/, '');
       const itemSearchableText = `${item.code} ${rawCode} ${item.name} ${item.category}`.toLowerCase();
-
       return searchTerms.every(term => itemSearchableText.includes(term));
     });
 
@@ -1743,12 +1700,15 @@ ${url}`;
       const isLow = item.qty <= 2;
       const isOut = item.qty <= 0;
       const imgSrc = getItemImage(item);
+      const isChecked = selectedItemsForPost.has(item.code);
+
       const card = document.createElement('div');
       card.className = 'product-card';
       card.onclick = () => openItemModal(item);
 
       card.innerHTML = `
         <div class="img-wrapper">
+          <input type="checkbox" class="item-select-checkbox" style="display: ${isAdmin ? 'block' : 'none'};" title="Select for Instagram Post" ${isChecked ? 'checked' : ''} onclick="toggleItemSelection('${item.code}', event)">
           <img src="${imgSrc}" alt="${item.name}" loading="lazy" onerror="handleImageFallback(this, '${item.category}')">
         </div>
         <div class="card-body">
@@ -1772,21 +1732,14 @@ ${url}`;
       grid.appendChild(card);
     });
 
-    if (currentVisibleCount < totalMatches) {
-      loadMoreBox.style.display = 'flex';
-    } else {
-      loadMoreBox.style.display = 'none';
-    }
+    loadMoreBox.style.display = currentVisibleCount < totalMatches ? 'flex' : 'none';
   }
 
   function validateCardInput(inputElem, maxStock) {
     let val = parseFloat(inputElem.value) || 1;
-    if (val > maxStock) {
-      inputElem.value = maxStock;
-    }
+    if (val > maxStock) inputElem.value = maxStock;
   }
 
-  // ================= ITEM DETAIL MODAL =================
   function openItemModal(item) {
     activeModalItem = item;
     document.getElementById('detailImg').src = getItemImage(item);
@@ -1800,11 +1753,7 @@ ${url}`;
     const qtyInput = document.getElementById('detailQtyInput');
     qtyInput.value = 1;
     qtyInput.max = Math.max(1, item.qty);
-    qtyInput.oninput = function() {
-      if (parseFloat(this.value) > item.qty) {
-        this.value = item.qty;
-      }
-    };
+    qtyInput.oninput = function() { if (parseFloat(this.value) > item.qty) this.value = item.qty; };
 
     document.getElementById('itemModal').classList.add('open');
   }
@@ -1821,7 +1770,6 @@ ${url}`;
     closeItemModal();
   }
 
-  // ================= CART & RFQ =================
   function addToCart(code, explicitQty = null) {
     const formattedCode = formatSixDigitCode(code);
     const item = inventory.find(i => i.code === formattedCode);
@@ -1832,41 +1780,19 @@ ${url}`;
       return;
     }
 
-    let reqQty = explicitQty;
-    if (!reqQty) {
-      const qtyInput = document.getElementById(`qty_${formattedCode}`);
-      reqQty = parseFloat(qtyInput ? qtyInput.value : 1) || 1;
-    }
-
+    let reqQty = explicitQty || (parseFloat(document.getElementById(`qty_${formattedCode}`)?.value) || 1);
     if (reqQty <= 0) return;
 
     const existing = cart.find(c => c.code === formattedCode);
     if (existing) {
-      if (existing.reqQty + reqQty > item.qty) {
-        existing.reqQty = item.qty;
-        alert(`Requested quantity adjusted to maximum available stock (${item.qty} ${item.unit || 'NOS'}).`);
-      } else {
-        existing.reqQty += reqQty;
-        alert(`Added ${reqQty} ${item.unit || 'NOS'} of [${formattedCode}] to your Quote Cart.`);
-      }
+      if (existing.reqQty + reqQty > item.qty) existing.reqQty = item.qty;
+      else existing.reqQty += reqQty;
     } else {
-      if (reqQty > item.qty) {
-        reqQty = item.qty;
-        alert(`Requested quantity adjusted to maximum available stock (${item.qty} ${item.unit || 'NOS'}).`);
-      } else {
-        alert(`Added ${reqQty} ${item.unit || 'NOS'} of [${formattedCode}] to your Quote Cart.`);
-      }
-
-      cart.push({
-        code: formattedCode,
-        name: item.name,
-        unit: item.unit || 'NOS',
-        reqQty: reqQty,
-        availableStock: item.qty
-      });
+      if (reqQty > item.qty) reqQty = item.qty;
+      cart.push({ code: formattedCode, name: item.name, unit: item.unit || 'NOS', reqQty: reqQty, availableStock: item.qty });
     }
-
     updateCartBadge();
+    alert(`Added ${reqQty} ${item.unit || 'NOS'} of [${formattedCode}] to Quote Cart.`);
   }
 
   function updateCartBadge() {
@@ -1877,14 +1803,8 @@ ${url}`;
   function handleCartQtyChange(index, inputElem) {
     let val = parseFloat(inputElem.value) || 1;
     const maxStock = cart[index].availableStock;
-    if (val > maxStock) {
-      val = maxStock;
-      inputElem.value = maxStock;
-      alert(`Maximum stock available for this item is ${maxStock}.`);
-    } else if (val < 1) {
-      val = 1;
-      inputElem.value = 1;
-    }
+    if (val > maxStock) { val = maxStock; inputElem.value = maxStock; }
+    else if (val < 1) { val = 1; inputElem.value = 1; }
     cart[index].reqQty = val;
     updateCartBadge();
   }
@@ -1906,14 +1826,8 @@ ${url}`;
             <td style="font-family: monospace; font-weight: bold;">${item.code}</td>
             <td>${item.name}</td>
             <td>${item.unit}</td>
-            <td>
-              <input type="number" min="1" max="${item.availableStock}" value="${item.reqQty}" 
-                     style="width: 70px; padding: 4px;" 
-                     onchange="handleCartQtyChange(${index}, this)">
-            </td>
-            <td>
-              <button onclick="cart.splice(${index}, 1); updateCartBadge(); openCartModal();" style="color:red; border:none; background:none; cursor:pointer;">✕</button>
-            </td>
+            <td><input type="number" min="1" max="${item.availableStock}" value="${item.reqQty}" style="width: 70px; padding: 4px;" onchange="handleCartQtyChange(${index}, this)"></td>
+            <td><button onclick="cart.splice(${index}, 1); updateCartBadge(); openCartModal();" style="color:red; border:none; background:none; cursor:pointer;">✕</button></td>
           </tr>
         `;
       });
@@ -1921,11 +1835,8 @@ ${url}`;
     document.getElementById('rfqModal').classList.add('open');
   }
 
-  function closeCartModal() {
-    document.getElementById('rfqModal').classList.remove('open');
-  }
+  function closeCartModal() { document.getElementById('rfqModal').classList.remove('open'); }
 
-  // ================= SUBMIT QUOTE VIA EMAIL / OUTLOOK =================
   function submitQuoteEmail(type = 'app') {
     const company = document.getElementById('custCompany').value.trim();
     const name = document.getElementById('custName').value.trim();
@@ -1938,68 +1849,32 @@ ${url}`;
     }
 
     const divider = "----------------------------------------------------------------------";
-
     const formattedItemList = cart.map((item, index) => {
       const sl = String(index + 1).padStart(2, '0');
-      const code = formatSixDigitCode(item.code);
-      const desc = item.name.trim();
-      const qty = `${item.reqQty} ${item.unit || 'NOS'}`;
-
-      return [
-        `[ITEM #${sl}]`,
-        `CODE        : ${code}`,
-        `DESCRIPTION : ${desc}`,
-        `QUANTITY    : ${qty}`,
-        divider
-      ].join("\n");
+      return `[ITEM #${sl}]\nCODE        : ${formatSixDigitCode(item.code)}\nDESCRIPTION : ${item.name.trim()}\nQUANTITY    : ${item.reqQty} ${item.unit || 'NOS'}\n${divider}`;
     }).join("\n");
 
     const emailTable = `${divider}\n${formattedItemList}`;
-
-    const subjectText = `Material RFQ - ${company} (${name})`;
-    const bodyText = 
-`Dear Sales Team,
-
-Please provide a formal price quotation for the requested materials listed below:
-
-${emailTable}
-
-======================================================================
-CLIENT & CONTACT DETAILS
-======================================================================
-Company Name   : ${company}
-Contact Person : ${name}
-Work Email     : ${email}
-Phone / Mobile : ${phone}
-
-Thank you,
-${name}`;
-
-    const subject = encodeURIComponent(subjectText);
-    const body = encodeURIComponent(bodyText);
+    const subject = encodeURIComponent(`Material RFQ - ${company} (${name})`);
+    const body = encodeURIComponent(`Dear Sales Team,\n\nPlease provide a formal price quotation for the requested materials listed below:\n\n${emailTable}\n\n======================================================================\nCLIENT & CONTACT DETAILS\n======================================================================\nCompany Name   : ${company}\nContact Person : ${name}\nWork Email     : ${email}\nPhone / Mobile : ${phone}\n\nThank you,\n${name}`);
 
     if (type === 'web') {
-      const outlookWebUrl = `https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(COMPANY_EMAIL)}&subject=${subject}&body=${body}`;
-      window.open(outlookWebUrl, '_blank');
+      window.open(`https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(COMPANY_EMAIL)}&subject=${subject}&body=${body}`, '_blank');
     } else {
       window.location.href = `mailto:${COMPANY_EMAIL}?subject=${subject}&body=${body}`;
     }
   }
 
-  // Check URL parameters for direct deep links (e.g. ?item=004433)
   function checkUrlDeepLink() {
     const urlParams = new URLSearchParams(window.location.search);
     const targetCode = urlParams.get('item');
     if (targetCode) {
       const formatted = formatSixDigitCode(targetCode);
       const match = inventory.find(i => i.code === formatted);
-      if (match) {
-        setTimeout(() => openItemModal(match), 400);
-      }
+      if (match) setTimeout(() => openItemModal(match), 400);
     }
   }
 
-  // Initial Bootup
   async function bootstrapApp() {
     initTheme();
     await loadPublicStockFile();
