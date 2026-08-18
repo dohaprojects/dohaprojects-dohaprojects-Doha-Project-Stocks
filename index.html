@@ -91,13 +91,12 @@
       transition: background-color 0.4s ease;
     }
 
-    /* Logo Section (Triple-click or Ctrl+Shift+A for Admin) */
     .logo-box {
       display: flex;
       align-items: center;
       gap: 10px;
       user-select: none;
-      cursor: pointer;
+      text-decoration: none;
     }
     .header-logo-img {
       height: 40px;
@@ -237,70 +236,6 @@
       padding: 0 16px;
     }
 
-    /* Secret Admin Control Panel (PIN: 1234) */
-    .admin-panel {
-      display: none;
-      background: var(--card);
-      border: 2px solid var(--blue);
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 24px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-    .admin-panel.open { display: block; }
-    .admin-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-    .admin-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-    }
-    .admin-box {
-      background: var(--card-img-bg);
-      padding: 16px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-    }
-    .admin-box h4 {
-      font-size: 14px;
-      margin-bottom: 10px;
-      color: var(--text);
-    }
-
-    .upload-zone {
-      border: 2px dashed #94a3b8;
-      border-radius: 6px;
-      padding: 16px;
-      text-align: center;
-      background: var(--card);
-      cursor: pointer;
-      margin-bottom: 8px;
-    }
-    .upload-zone input { display: none; }
-
-    .prefix-rule-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 8px;
-      font-size: 12px;
-      background: var(--card);
-      border-radius: 4px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-    }
-    .prefix-rule-table th, .prefix-rule-table td {
-      padding: 6px 8px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-    }
-    .prefix-rule-table th { background: var(--card-img-bg); color: var(--text-muted); }
-
     /* Catalog Bar */
     .catalog-bar {
       display: flex;
@@ -357,21 +292,6 @@
       object-position: center;
       display: block;
     }
-
-    .btn-edit-img {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      background: rgba(0,0,0,0.75);
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      cursor: pointer;
-      display: none;
-      z-index: 2;
-    }
     
     .card-body {
       padding: 12px;
@@ -411,10 +331,6 @@
       font-size: 13px;
       font-weight: bold;
       margin: 4px 0 6px 0;
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
     }
     .stock-badge.ok { color: var(--green); }
     .stock-badge.low { color: var(--red); }
@@ -452,7 +368,7 @@
     }
     .btn-add-rfq:hover { background: var(--btn-yellow-hover); }
 
-    /* Amazon-Style Share Button */
+    /* Share Button */
     .btn-amazon-share {
       width: 34px;
       height: 34px;
@@ -877,8 +793,7 @@
 
 <!-- Navigation Header -->
 <header>
-  <!-- Direct in-code logo image (Triple-click or Ctrl+Shift+A for Admin) -->
-  <div class="logo-box" id="secretLogoTrigger" title="Doha Project Stocks Catalog">
+  <div class="logo-box">
     <img class="header-logo-img" src="images/dp1.png" alt="Doha Project Logo" onerror="handleLogoFallback(this)">
     <div class="logo-text-group">
       <span class="logo">Doha Project Stocks</span>
@@ -928,104 +843,6 @@
 
 <div class="container">
 
-  <!-- SECRET ADMIN PANEL -->
-  <div id="adminPanel" class="admin-panel">
-    <div class="admin-header">
-      <div>
-        <strong style="color: var(--blue); font-size: 16px;">⚙️ Admin: Inventory, Keyword Rules & Image Management</strong>
-        <span style="font-size: 12px; color: var(--text-muted); margin-left: 8px;">(Customer cannot see this)</span>
-      </div>
-      <button onclick="closeAdminSession()" style="padding: 4px 10px; cursor: pointer; border-radius: 4px; border: 1px solid var(--border); background: var(--card); color: var(--text);">Close Admin Mode</button>
-    </div>
-
-    <div class="admin-grid">
-      <!-- 1. Upload stock.xlsx -->
-      <div class="admin-box">
-        <h4>1. 📊 Upload "stock.xlsx" File</h4>
-        <div class="upload-zone" onclick="document.getElementById('stockFileInput').click()">
-          <p style="font-size: 13px; font-weight: bold; color: var(--blue);">Click to Upload stock.xlsx</p>
-          <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Reads Item Code, Name, Stock Qty, Unit</p>
-          <input type="file" id="stockFileInput" accept=".xlsx, .xls, .csv" onchange="handleStockFileUpload(event)">
-        </div>
-        <div id="uploadStatus" style="font-size: 12px; font-weight: bold; color: #10b981;"></div>
-      </div>
-
-      <!-- 2. Category Fallback Image Path / File Upload -->
-      <div class="admin-box">
-        <h4>2. 📂 Set Broad Category Fallback</h4>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <select id="commonCatSelect" style="padding: 6px; border: 1px solid var(--border); background:var(--input-bg); color:var(--text); border-radius: 4px; font-size: 12px;">
-            <option value="Pipes">Pipes</option>
-            <option value="Fittings">Fittings</option>
-            <option value="Flanges">Flanges</option>
-            <option value="Valves">Valves</option>
-            <option value="Fasteners & Gaskets">Fasteners & Gaskets</option>
-            <option value="Other Products">Other Products (Global Fallback)</option>
-          </select>
-          
-          <div style="display:flex; gap:6px;">
-            <input type="text" id="catPathInput" placeholder="e.g. valve2.jpg or images/valve2.jpg" style="flex:1; padding:6px; font-size:12px; border:1px solid var(--border); background:var(--input-bg); color:var(--text); border-radius:4px;">
-            <button onclick="setCategoryPathDirect()" style="padding:6px 10px; font-size:12px; background:var(--blue); color:white; border:none; border-radius:4px; cursor:pointer;">Save Path</button>
-          </div>
-
-          <div style="text-align:center; font-size:11px; color:var(--text-muted);">— OR browse from system —</div>
-
-          <input type="file" id="commonCatFileInput" accept="image/*" style="display:none;" onchange="handleCommonCategoryUpload(event)">
-          <button onclick="document.getElementById('commonCatFileInput').click()" style="padding: 6px 12px; background: #475569; color:white; border:none; border-radius:4px; font-size:12px; cursor:pointer;">
-            📁 Browse Image File for Category
-          </button>
-        </div>
-        <div id="catImageStatus" style="font-size: 12px; font-weight: bold; color: #10b981; margin-top:4px;"></div>
-      </div>
-
-      <!-- 3. Description Prefix / Keyword Image Rule Manager -->
-      <div class="admin-box" style="grid-column: span 2;">
-        <h4>3. 🏷️ Set Images by Description Starting Words (e.g. NIPPLE PIPE, COUPLING, WASHER)</h4>
-        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px;">
-          Match items whose description starts with specific words to show custom images automatically.
-        </p>
-
-        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
-          <input type="text" id="newPrefixInput" placeholder="Starting words (e.g. NIPPLE PIPE)" style="flex:1; min-width:180px; padding:6px 10px; font-size:12px; border:1px solid var(--border); background:var(--input-bg); color:var(--text); border-radius:4px;">
-          <input type="text" id="newPrefixImgPath" placeholder="Image path / URL (e.g. images/NIPPLE.webp or NIPPLE.webp)" style="flex:1.5; min-width:200px; padding:6px 10px; font-size:12px; border:1px solid var(--border); background:var(--input-bg); color:var(--text); border-radius:4px;">
-          
-          <input type="file" id="prefixImageFileInput" accept="image/*" style="display:none;" onchange="handlePrefixFileUpload(event)">
-          <button onclick="document.getElementById('prefixImageFileInput').click()" style="padding:6px 10px; font-size:12px; background:#475569; color:white; border:none; border-radius:4px; cursor:pointer;">Browse File</button>
-          
-          <button onclick="savePrefixRule()" style="padding:6px 14px; font-size:12px; background:#10b981; color:white; border:none; border-radius:4px; font-weight:bold; cursor:pointer;">+ Add / Update Rule</button>
-        </div>
-
-        <div id="prefixRuleStatus" style="font-size: 12px; font-weight: bold; color: #10b981; margin-top:6px;"></div>
-
-        <!-- Table of active prefix rules -->
-        <table class="prefix-rule-table">
-          <thead>
-            <tr>
-              <th style="width: 25%;">Starting Keyword(s)</th>
-              <th>Assigned Image Source / Path</th>
-              <th style="width: 60px; text-align:center;">Action</th>
-            </tr>
-          </thead>
-          <tbody id="prefixRulesTableBody"></tbody>
-        </table>
-      </div>
-
-      <!-- 4. Bulk Separate Item Images by Code -->
-      <div class="admin-box">
-        <h4>4. 🖼️ Bulk Upload Item Images (by Item Code)</h4>
-        <div class="upload-zone" onclick="document.getElementById('bulkImageInput').click()">
-          <p style="font-size: 13px; font-weight: bold; color: var(--blue);">Select Multiple Images</p>
-          <p style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Name photos like <strong>004433.jpg</strong> or <strong>4433.jpg</strong></p>
-          <input type="file" id="bulkImageInput" accept="image/*" multiple onchange="handleBulkImageUpload(event)">
-        </div>
-        <div id="imageUploadStatus" style="font-size: 12px; font-weight: bold; color: #10b981;"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Hidden single image picker for individual item updates -->
-  <input type="file" id="singleItemImgInput" accept="image/*" style="display:none;" onchange="handleSingleItemImageChange(event)">
-
   <!-- Catalog Subheader -->
   <div class="catalog-bar">
     <h2 style="font-size: 18px;">Material Inventory</h2>
@@ -1042,7 +859,7 @@
 
 </div>
 
-<!-- ITEM DETAILS MODAL (Opens when clicking any item card) -->
+<!-- ITEM DETAILS MODAL -->
 <div id="itemModal" class="modal" onclick="if(event.target.id === 'itemModal') closeItemModal()">
   <div class="item-modal-content">
     <button class="modal-close" onclick="closeItemModal()">✕</button>
@@ -1198,7 +1015,6 @@
 
 <script>
   const COMPANY_EMAIL = "sales@dohaprojects.com";
-  const ADMIN_PIN = "1234";
 
   // ================= LIVE GOOGLE SHEET CSV FEED =================
   const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1PyNtiW0wxCtb3hOAr_kdxiEHDAPJbzwP/gviz/tq?tqx=out:csv";
@@ -1243,9 +1059,7 @@
           `circle(${endRadius}px at ${x}px ${y}px)`
         ];
         document.documentElement.animate(
-          {
-            clipPath: clipPath
-          },
+          { clipPath: clipPath },
           {
             duration: 650,
             easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
@@ -1271,51 +1085,6 @@
     }
   }
 
-  // ================= INDEXED-DB HIGH CAPACITY STORAGE ENGINE =================
-  let dbInstance = null;
-
-  function initDB() {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open("DohaStocksMediaDB", 1);
-      request.onupgradeneeded = function(e) {
-        const db = e.target.result;
-        if (!db.objectStoreNames.contains("imagesStore")) {
-          db.createObjectStore("imagesStore");
-        }
-      };
-      request.onsuccess = function(e) {
-        dbInstance = e.target.result;
-        resolve(dbInstance);
-      };
-      request.onerror = function(e) {
-        console.error("IndexedDB error:", e);
-        reject(e);
-      };
-    });
-  }
-
-  function dbSaveItem(key, val) {
-    if (!dbInstance) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-      const tx = dbInstance.transaction(["imagesStore"], "readwrite");
-      const store = tx.objectStore("imagesStore");
-      const req = store.put(val, key);
-      req.onsuccess = () => resolve();
-      req.onerror = () => reject(req.error);
-    });
-  }
-
-  function dbGetItem(key) {
-    if (!dbInstance) return Promise.resolve(null);
-    return new Promise((resolve, reject) => {
-      const tx = dbInstance.transaction(["imagesStore"], "readonly");
-      const store = tx.objectStore("imagesStore");
-      const req = store.get(key);
-      req.onsuccess = () => resolve(req.result);
-      req.onerror = () => resolve(null);
-    });
-  }
-
   // Formats any raw code to a strict 6-digit numeric string
   function formatSixDigitCode(code) {
     if (code === undefined || code === null) return "000000";
@@ -1327,7 +1096,7 @@
   }
 
   // Broad Category Fallback Images
-  let commonCategoryImages = {
+  const commonCategoryImages = {
     'Pipes': 'images/pipe (1).png',
     'Fittings': 'images/fittings2.png',
     'Flanges': 'images/Flanges - Carbon.png',
@@ -1336,8 +1105,8 @@
     'Other Products': 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=500&auto=format&fit=crop&q=60'
   };
 
-  // Description Prefix / Keyword Image Rules
-  const defaultPrefixRules = {
+  // Description Prefix / Keyword Global Image Rules
+  const descriptionPrefixImages = {
     'NIPPLE PIPE': 'images/NIPPLE.webp',
     'NIPPLE HEX': 'images/NIPPLE.webp',
     'NUT HEX': 'images/12072 (1).png',
@@ -1386,9 +1155,6 @@
     'NIPPLE RED HEX': 'images/nipple red hex.png',
     'NIPPLE CLOSE': 'images/nipple close (1).png'
   };
-
-  let descriptionPrefixImages = Object.assign({}, defaultPrefixRules);
-  let itemSpecificImages = {};
 
   const ITEMS_PER_PAGE = 60;
   let currentVisibleCount = ITEMS_PER_PAGE;
@@ -1457,8 +1223,6 @@
   });
 
   let cart = [];
-  let isAdmin = false;
-  let currentTargetCodeForSingleImage = null;
   let activeModalItem = null;
 
   function handleLogoFallback(imgElement) {
@@ -1519,10 +1283,6 @@
 
   // Hierarchical Image Matcher
   function getItemImage(item) {
-    if (itemSpecificImages[item.code]) {
-      return itemSpecificImages[item.code];
-    }
-
     const upperName = String(item.name || '').replace(/[\u00a0\s]+/g, ' ').trim().toUpperCase();
 
     const sortedRules = Object.keys(descriptionPrefixImages).sort((a, b) => {
@@ -1645,306 +1405,6 @@
     }
   }
 
-  // ================= SECRET ADMIN ACCESS =================
-  let clickCount = 0;
-  let clickTimer = null;
-  document.getElementById('secretLogoTrigger').addEventListener('click', () => {
-    clickCount++;
-    if (clickCount === 1) {
-      clickTimer = setTimeout(() => { clickCount = 0; }, 600);
-    } else if (clickCount === 3) {
-      clearTimeout(clickTimer);
-      clickCount = 0;
-      promptAdminLogin();
-    }
-  });
-
-  window.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'A' || e.key === 'a')) {
-      e.preventDefault();
-      promptAdminLogin();
-    }
-  });
-
-  function promptAdminLogin() {
-    if (isAdmin) {
-      document.getElementById('adminPanel').classList.toggle('open');
-      return;
-    }
-    const pin = prompt("Enter Master PIN to access Admin:");
-    if (pin === ADMIN_PIN) {
-      isAdmin = true;
-      document.getElementById('adminPanel').classList.add('open');
-      renderPrefixRulesTable();
-      renderCatalog();
-    } else if (pin !== null) {
-      alert("Unauthorized Access.");
-    }
-  }
-
-  function closeAdminSession() {
-    isAdmin = false;
-    document.getElementById('adminPanel').classList.remove('open');
-    renderCatalog();
-  }
-
-  // ================= EXCEL STOCK UPLOAD =================
-  function handleStockFileUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const statusElem = document.getElementById('uploadStatus');
-    statusElem.innerText = "Processing stock spreadsheet...";
-
-    const reader = new FileReader();
-    reader.onload = function(evt) {
-      try {
-        const data = new Uint8Array(evt.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
-
-        if (!rows || rows.length === 0) {
-          alert("Uploaded sheet is empty.");
-          return;
-        }
-
-        const parsedItems = [];
-
-        rows.forEach(row => {
-          const cleanRow = {};
-          Object.keys(row).forEach(k => {
-            cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k];
-          });
-
-          const rawCode = cleanRow['item code'] || cleanRow['code'] || '';
-          const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['name'] || '')
-                         .replace(/[\u00a0\s]+/g, ' ')
-                         .trim();
-          const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || 0);
-          const unit = String(cleanRow['unit'] || 'NOS').trim();
-
-          if (rawCode && name) {
-            const codeSixDigit = formatSixDigitCode(rawCode);
-            parsedItems.push({
-              code: codeSixDigit,
-              name: name,
-              category: detectCategory(name),
-              qty: isNaN(stock) ? 0 : stock,
-              unit: unit
-            });
-          }
-        });
-
-        inventory = parsedItems;
-        localStorage.setItem('materials_catalog', JSON.stringify(inventory));
-        resetAndRender();
-
-        statusElem.innerText = `✓ Loaded ${inventory.length} items from stock.xlsx!`;
-        e.target.value = '';
-      } catch (err) {
-        alert("Error reading spreadsheet: " + err.message);
-      }
-    };
-    reader.readAsArrayBuffer(file);
-  }
-
-  // ================= PREFIX / STARTING KEYWORD RULE LOGIC =================
-  async function savePrefixRule() {
-    const prefix = document.getElementById('newPrefixInput').value.replace(/[\u00a0\s]+/g, ' ').trim().toUpperCase();
-    const path = document.getElementById('newPrefixImgPath').value.trim();
-
-    if (!prefix || !path) {
-      alert("Please enter both the starting keyword(s) and an image path / URL.");
-      return;
-    }
-
-    descriptionPrefixImages[prefix] = path;
-    await dbSaveItem('desc_prefix_images', descriptionPrefixImages);
-    document.getElementById('prefixRuleStatus').innerText = `✓ Saved rule for "${prefix}"!`;
-    document.getElementById('newPrefixInput').value = '';
-    document.getElementById('newPrefixImgPath').value = '';
-    
-    renderPrefixRulesTable();
-    renderCatalog();
-  }
-
-  function handlePrefixFileUpload(e) {
-    const file = e.target.files[0];
-    const prefix = document.getElementById('newPrefixInput').value.replace(/[\u00a0\s]+/g, ' ').trim().toUpperCase();
-    
-    if (!file) return;
-    if (!prefix) {
-      alert("Please enter the starting keyword(s) in the text box before selecting the file.");
-      e.target.value = '';
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = async function(evt) {
-      descriptionPrefixImages[prefix] = evt.target.result;
-      await dbSaveItem('desc_prefix_images', descriptionPrefixImages);
-      document.getElementById('prefixRuleStatus').innerText = `✓ Image uploaded & saved permanently for keyword "${prefix}"!`;
-      document.getElementById('newPrefixInput').value = '';
-      document.getElementById('newPrefixImgPath').value = '';
-      e.target.value = '';
-      renderPrefixRulesTable();
-      renderCatalog();
-    };
-    reader.readAsDataURL(file);
-  }
-
-  async function deletePrefixRule(prefix) {
-    if (confirm(`Remove image rule for "${prefix}"?`)) {
-      delete descriptionPrefixImages[prefix];
-      await dbSaveItem('desc_prefix_images', descriptionPrefixImages);
-      renderPrefixRulesTable();
-      renderCatalog();
-    }
-  }
-
-  function renderPrefixRulesTable() {
-    const tbody = document.getElementById('prefixRulesTableBody');
-    if (!tbody) return;
-    tbody.innerHTML = '';
-
-    const keys = Object.keys(descriptionPrefixImages);
-    if (keys.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:var(--text-muted); padding:10px;">No description keyword rules configured.</td></tr>`;
-      return;
-    }
-
-    keys.forEach(key => {
-      const val = descriptionPrefixImages[key];
-      const displayVal = String(val).startsWith('data:image') ? '[Uploaded Image File]' : val;
-      tbody.innerHTML += `
-        <tr>
-          <td><strong>${key}</strong></td>
-          <td style="color:var(--text-muted); word-break:break-all; max-width:260px;">${displayVal}</td>
-          <td style="text-align:center;">
-            <button onclick="deletePrefixRule('${key}')" style="color:red; border:none; background:none; cursor:pointer; font-weight:bold;">✕</button>
-          </td>
-        </tr>
-      `;
-    });
-  }
-
-  // ================= CATEGORY FALLBACK & BULK IMAGES =================
-  async function setCategoryPathDirect() {
-    const cat = document.getElementById('commonCatSelect').value;
-    const path = document.getElementById('catPathInput').value.trim();
-    if (!path) return;
-
-    commonCategoryImages[cat] = path;
-    await dbSaveItem('common_cat_images', commonCategoryImages);
-    document.getElementById('catImageStatus').innerText = `✓ Saved image path for "${cat}"!`;
-    document.getElementById('catPathInput').value = '';
-    renderCatalog();
-  }
-
-  function handleCommonCategoryUpload(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const cat = document.getElementById('commonCatSelect').value;
-    const reader = new FileReader();
-    reader.onload = async function(evt) {
-      commonCategoryImages[cat] = evt.target.result;
-      await dbSaveItem('common_cat_images', commonCategoryImages);
-      document.getElementById('catImageStatus').innerText = `✓ Updated image file for "${cat}"!`;
-      renderCatalog();
-      e.target.value = '';
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function handleBulkImageUpload(e) {
-    const files = Array.from(e.target.files);
-    if (!files || files.length === 0) return;
-
-    let matched = 0;
-    let processed = 0;
-
-    files.forEach(file => {
-      const fileBaseName = file.name.substring(0, file.name.lastIndexOf('.')).trim().toLowerCase();
-      const codeFormatted = formatSixDigitCode(fileBaseName).toLowerCase();
-
-      const reader = new FileReader();
-      reader.onload = async function(evt) {
-        const base64 = evt.target.result;
-        
-        const match = inventory.find(i => 
-          i.code.toLowerCase() === fileBaseName || 
-          i.code.toLowerCase() === codeFormatted
-        );
-
-        if (match) {
-          itemSpecificImages[match.code] = base64;
-          matched++;
-        }
-
-        processed++;
-        if (processed === files.length) {
-          await dbSaveItem('item_specific_images', itemSpecificImages);
-          document.getElementById('imageUploadStatus').innerText = `✓ Linked & saved ${matched} image(s) permanently!`;
-          renderCatalog();
-          e.target.value = '';
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  function triggerSingleItemImageUpload(code, evt) {
-    if (evt) evt.stopPropagation();
-    currentTargetCodeForSingleImage = code;
-    document.getElementById('singleItemImgInput').click();
-  }
-
-  function handleSingleItemImageChange(e) {
-    const file = e.target.files[0];
-    if (!file || !currentTargetCodeForSingleImage) return;
-
-    const reader = new FileReader();
-    reader.onload = async function(evt) {
-      itemSpecificImages[currentTargetCodeForSingleImage] = evt.target.result;
-      await dbSaveItem('item_specific_images', itemSpecificImages);
-      renderCatalog();
-      e.target.value = '';
-    };
-    reader.readAsDataURL(file);
-  }
-
-  // ================= ADMIN-ONLY STOCK MODIFIER =================
-  function adminEditStockPrompt(code, evt) {
-    if (evt) evt.stopPropagation();
-    if (!isAdmin) {
-      alert("Unauthorized: Admin login required.");
-      return;
-    }
-
-    const item = inventory.find(i => i.code === code);
-    if (!item) return;
-
-    const newQtyStr = prompt(`[ADMIN] Update Stock for:\n[${item.code}] ${item.name}\n\nCurrent Stock: ${item.qty} ${item.unit || 'NOS'}\nEnter New Stock Quantity:`, item.qty);
-
-    if (newQtyStr !== null && newQtyStr.trim() !== '') {
-      const newQty = parseFloat(newQtyStr);
-      if (isNaN(newQty) || newQty < 0) {
-        alert("Please enter a valid positive number.");
-        return;
-      }
-
-      item.qty = newQty;
-      localStorage.setItem('materials_catalog', JSON.stringify(inventory));
-      renderCatalog();
-      if (activeModalItem && activeModalItem.code === code) {
-        openItemModal(item);
-      }
-      alert(`✓ Stock for [${item.code}] updated to ${newQty} ${item.unit || 'NOS'} successfully!`);
-    }
-  }
-
   // ================= CATALOG RENDER & WORD-BY-WORD SEARCH =================
   function resetAndRender() {
     currentVisibleCount = ITEMS_PER_PAGE;
@@ -2001,19 +1461,14 @@
       card.innerHTML = `
         <div class="img-wrapper">
           <img src="${imgSrc}" alt="${item.name}" loading="lazy" onerror="handleImageFallback(this, '${item.category}')">
-          ${isAdmin ? `<button class="btn-edit-img" style="display:block;" onclick="triggerSingleItemImageUpload('${item.code}', event)">📷 Change Photo</button>` : ''}
         </div>
         <div class="card-body">
           <span class="category-badge">${item.category}</span>
           <div class="product-title" title="${item.name}">${item.name}</div>
           <div class="product-code">Item Code: <strong>${item.code}</strong></div>
-          
-          <!-- Stock Display with Admin-Only Edit Option -->
           <div class="stock-badge ${isOut ? 'low' : (isLow ? 'low' : 'ok')}">
-            <span>${isOut ? '❌ Out of Stock' : (isLow ? '⚠️ Low Stock: ' + item.qty + ' ' + (item.unit || 'NOS') : '✓ In Stock: ' + item.qty + ' ' + (item.unit || 'NOS'))}</span>
-            ${isAdmin ? `<button onclick="adminEditStockPrompt('${item.code}', event)" style="padding: 2px 6px; font-size: 11px; cursor: pointer; border: 1px solid var(--border); border-radius: 3px; background: var(--input-bg); color: var(--text);">✏️ Edit Stock</button>` : ''}
+            ${isOut ? '❌ Out of Stock' : (isLow ? '⚠️ Low Stock: ' + item.qty + ' ' + (item.unit || 'NOS') : '✓ In Stock: ' + item.qty + ' ' + (item.unit || 'NOS'))}
           </div>
-
           <div class="card-actions" onclick="event.stopPropagation()">
             <input type="number" id="qty_${item.code}" class="qty-select" value="1" min="1" max="${Math.max(1, item.qty)}" oninput="validateCardInput(this, ${item.qty})">
             <button class="btn-add-rfq" onclick="addToCart('${item.code}')">+ Add to RFQ</button>
@@ -2195,7 +1650,6 @@
 
     const divider = "----------------------------------------------------------------------";
 
-    // Formats each item with clean dividers and dedicated aligned lines
     const formattedItemList = cart.map((item, index) => {
       const sl = String(index + 1).padStart(2, '0');
       const code = formatSixDigitCode(item.code);
@@ -2256,27 +1710,10 @@ ${name}`;
     }
   }
 
-  // Initial Bootup & IndexedDB Loader
+  // Initial Bootup
   async function bootstrapApp() {
     initTheme();
-    try {
-      await initDB();
-      const savedPrefixRules = await dbGetItem('desc_prefix_images');
-      if (savedPrefixRules) descriptionPrefixImages = Object.assign({}, defaultPrefixRules, savedPrefixRules);
-
-      const savedCommonCats = await dbGetItem('common_cat_images');
-      if (savedCommonCats) commonCategoryImages = Object.assign({}, commonCategoryImages, savedCommonCats);
-
-      const savedSpecific = await dbGetItem('item_specific_images');
-      if (savedSpecific) itemSpecificImages = savedSpecific;
-    } catch (e) {
-      console.warn("Using fallback memory storage:", e);
-    }
-    
-    // Automatically load stock from live Google Sheet on page open
     await loadPublicStockFile();
-
-    renderPrefixRulesTable();
     renderCatalog();
     checkUrlDeepLink();
   }
