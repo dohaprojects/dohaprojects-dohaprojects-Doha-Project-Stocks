@@ -411,6 +411,10 @@
       font-size: 13px;
       font-weight: bold;
       margin: 4px 0 6px 0;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
     }
     .stock-badge.ok { color: var(--green); }
     .stock-badge.low { color: var(--red); }
@@ -517,6 +521,7 @@
       background: none;
       cursor: pointer;
       color: var(--text-muted);
+      z-index: 10;
     }
     .modal-close:hover { color: var(--text); }
 
@@ -759,7 +764,25 @@
       color: #6b7280;
     }
 
+    /* ================= MOBILE RESPONSIVE ADAPTATIONS ================= */
     @media (max-width: 860px) {
+      header {
+        flex-wrap: wrap;
+        padding: 10px 14px;
+        gap: 10px;
+      }
+      .logo-box {
+        order: 1;
+      }
+      .header-actions {
+        order: 2;
+        margin-left: auto;
+      }
+      .search-container {
+        order: 3;
+        width: 100%;
+        max-width: 100%;
+      }
       .footer-container {
         grid-template-columns: 1fr;
         gap: 28px;
@@ -769,10 +792,84 @@
       }
     }
 
-    @media (max-width: 680px) {
-      .item-modal-content { flex-direction: column; }
-      .item-modal-img, .item-modal-info { width: 100%; }
-      .item-modal-img { height: 220px; border-right: none; border-bottom: 1px solid var(--border); }
+    @media (max-width: 600px) {
+      .container {
+        padding: 0 10px;
+        margin: 12px auto;
+      }
+      .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+      }
+      .product-card {
+        height: auto;
+        min-height: 350px;
+      }
+      .img-wrapper {
+        height: 140px;
+        padding: 8px;
+      }
+      .card-body {
+        padding: 8px;
+        gap: 2px;
+      }
+      .product-title {
+        font-size: 12.5px;
+        height: 34px;
+      }
+      .product-code {
+        font-size: 11px;
+      }
+      .stock-badge {
+        font-size: 11.5px;
+        margin: 2px 0 4px 0;
+      }
+      .card-actions {
+        gap: 4px;
+      }
+      .qty-select {
+        width: 44px;
+        padding: 4px;
+        font-size: 12px;
+      }
+      .btn-add-rfq {
+        font-size: 11.5px;
+        padding: 6px 4px;
+      }
+      .btn-amazon-share {
+        width: 30px;
+        height: 30px;
+      }
+      .item-modal-content {
+        flex-direction: column;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .item-modal-img {
+        width: 100%;
+        min-height: 180px;
+        height: 180px;
+        padding: 12px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .item-modal-info {
+        width: 100%;
+        padding: 16px;
+      }
+      .customer-form {
+        grid-template-columns: 1fr;
+        padding: 10px;
+      }
+      .rfq-content {
+        padding: 16px;
+      }
+      .rfq-table {
+        font-size: 11.5px;
+      }
+      .rfq-table th, .rfq-table td {
+        padding: 6px 4px;
+      }
     }
   </style>
 </head>
@@ -1236,7 +1333,7 @@
     'Other Products': 'https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=500&auto=format&fit=crop&q=60'
   };
 
-  // 1. You can write multi-word rules separated by spaces or + (e.g. 'BOLT STUD A193' or 'BOLT STUD')
+  // Multi-word rules
   const defaultPrefixRules = {
     'NIPPLE PIPE': 'images/NIPPLE.webp',
     'NIPPLE HEX': 'images/NIPPLE.webp',
@@ -1298,7 +1395,7 @@
   function detectCategory(name) {
     const n = String(name || '').replace(/[\u00a0\s]+/g, ' ').trim().toUpperCase();
 
-    // 1. Valves: Valves (Gate, Globe, Check, Ball, Butterfly, Needle, Actuators)
+    // 1. Valves
     if (n.includes('VALVE') || n.includes('VLV') || n.includes('GATE') || n.includes('GLOBE') || 
         n.includes('BUTTERFLY') || n.includes('ACTUATOR') || n.includes('NEEDLE')) {
       return 'Valves';
@@ -1308,25 +1405,25 @@
       return 'Valves';
     }
 
-    // 2. Pipes: Pipes, Pipe SMLS, Pipe ERW, Tubes, Casings
+    // 2. Pipes
     if ((n.includes('PIPE') || n.includes('TUBE') || n.includes('CASING') || n.includes('SMLS') || n.includes('ERW')) && 
         !n.includes('NIPPLE') && !n.includes('FITTING') && !n.includes('CLAMP') && !n.includes('PLUG') && !n.includes('CUTTER')) {
       return 'Pipes';
     }
 
-    // 3. Flanges: Flanges, Spade Blind, Spectacle Blind
+    // 3. Flanges
     if (n.includes('FLANGE') || n.includes('FLG') || n.includes('SPADE BLIND') || n.includes('SPECTACLE BLIND') || n.includes('BLIND SPADE')) {
       return 'Flanges';
     }
 
-    // 4. Fasteners & Gaskets: Gaskets, Stud Bolts, Hex Nuts, Washers, Clamps, U-Bolts, Screws
+    // 4. Fasteners & Gaskets
     if (n.includes('GASKET') || n.includes('GSK') || n.includes('FASTENER') || n.includes('STUD') || 
         n.includes('BOLT') || n.includes('NUT') || n.includes('WASHER') || n.includes('CLAMP') || 
         n.includes('SCREW') || n.includes('ANCHOR') || n.includes('U-BOLT') || n.includes('U BOLT')) {
       return 'Fasteners & Gaskets';
     }
 
-    // 5. Fittings: Elbows, Nipple Pipe, Nipple Hex, Couplings (Full/Half), Unions, Reducers (Conc/Ecc), Tees, Caps, Bushings, Olets, Plug Hex, Plug Round, Plug Square, Bar Thread
+    // 5. Fittings
     if (n.includes('ELBOW') || n.includes('NIPPLE') || n.includes('COUPLING') || n.includes('UNION') || 
         n.includes('REDUCER') || n.includes('TEE') || n.includes('CAP') || 
         n.includes('BUSH') || n.includes('BUSHING') || n.includes('OLET') || n.includes('SOCKOLET') || 
@@ -1336,7 +1433,7 @@
       return 'Fittings';
     }
 
-    // 6. Other Products: Bars, Rods, Sheets, Plates, Tools, and other industrial items
+    // 6. Other Products
     return 'Other Products';
   }
 
@@ -1370,17 +1467,60 @@
     }
   }
 
-  // 2. Updated Smart Hierarchical Matcher
+  // ================= AUTO-LOAD PUBLIC STOCK SPREADSHEET =================
+  async function loadPublicStockFile() {
+    try {
+      const response = await fetch('stock.xlsx');
+      if (!response.ok) return;
+
+      const data = await response.arrayBuffer();
+      const workbook = XLSX.read(new Uint8Array(data), { type: 'array' });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+
+      if (rows && rows.length > 0) {
+        const parsedItems = [];
+        rows.forEach(row => {
+          const cleanRow = {};
+          Object.keys(row).forEach(k => {
+            cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k];
+          });
+
+          const rawCode = cleanRow['item code'] || cleanRow['code'] || '';
+          const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['name'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
+          const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || 0);
+          const unit = String(cleanRow['unit'] || 'NOS').trim();
+
+          if (rawCode && name) {
+            parsedItems.push({
+              code: formatSixDigitCode(rawCode),
+              name: name,
+              category: detectCategory(name),
+              qty: isNaN(stock) ? 0 : stock,
+              unit: unit
+            });
+          }
+        });
+
+        if (parsedItems.length > 0) {
+          inventory = parsedItems;
+          localStorage.setItem('materials_catalog', JSON.stringify(inventory));
+          resetAndRender();
+        }
+      }
+    } catch (err) {
+      console.log("Remote stock.xlsx not found, using saved inventory.");
+    }
+  }
+
+  // Hierarchical Image Matcher
   function getItemImage(item) {
-    // 1. Direct Item Code Match (Specific Photo)
     if (itemSpecificImages[item.code]) {
       return itemSpecificImages[item.code];
     }
 
-    // Clean description string (removes non-breaking spaces \u00a0)
     const upperName = String(item.name || '').replace(/[\u00a0\s]+/g, ' ').trim().toUpperCase();
 
-    // Sort rules by specificity (rules with more words match first)
     const sortedRules = Object.keys(descriptionPrefixImages).sort((a, b) => {
       const wordsA = a.trim().split(/\s+/).length;
       const wordsB = b.trim().split(/\s+/).length;
@@ -1391,7 +1531,6 @@
       const cleanRule = rule.replace(/[\u00a0\s]+/g, ' ').trim().toUpperCase();
       const ruleWords = cleanRule.split(/\s+/).filter(w => w.length > 0);
 
-      // Multi-word check: ALL words in the rule must exist in the product name
       const allWordsMatch = ruleWords.every(word => upperName.includes(word));
 
       if (allWordsMatch) {
@@ -1399,12 +1538,10 @@
       }
     }
 
-    // 3. Fallback Category Image
     if (commonCategoryImages[item.category]) {
       return commonCategoryImages[item.category];
     }
 
-    // 4. Final Placeholder
     return commonCategoryImages['Other Products'] || getPlaceholderSVG();
   }
 
@@ -1433,22 +1570,32 @@
     resetAndRender();
   }
 
-  // ================= DIRECT AMAZON-STYLE SHARE DIALOG =================
+  // ================= FAIL-SAFE SHARE & COPY ENGINE =================
   function shareDirectItem(itemCode, evt) {
-    if (evt) evt.stopPropagation();
+    if (evt) {
+      evt.preventDefault();
+      evt.stopPropagation();
+    }
 
-    const item = inventory.find(i => i.code === formatSixDigitCode(itemCode));
-    const url = new URL(window.location.href);
-    url.searchParams.set('item', formatSixDigitCode(itemCode));
-    const cleanUrl = url.toString();
+    const formattedCode = formatSixDigitCode(itemCode);
+    const item = inventory.find(i => i.code === formattedCode);
+
+    let cleanUrl = window.location.href.split('?')[0];
+    cleanUrl += `?item=${encodeURIComponent(formattedCode)}`;
 
     const shareData = {
       title: item ? item.name : "Doha Project Stocks",
-      text: item ? `Check stock for [${item.code}] ${item.name} at Doha Project Stocks Qatar:` : "Industrial Material Catalog",
+      text: item ? `Check stock for [${formattedCode}] ${item.name} at Doha Project Stocks Qatar:` : "Industrial Material Catalog",
       url: cleanUrl
     };
 
-    if (navigator.share) {
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      navigator.share(shareData).catch(err => {
+        if (err.name !== 'AbortError') {
+          copyDirectFallback(cleanUrl);
+        }
+      });
+    } else if (navigator.share) {
       navigator.share(shareData).catch(err => {
         if (err.name !== 'AbortError') {
           copyDirectFallback(cleanUrl);
@@ -1460,11 +1607,38 @@
   }
 
   function copyDirectFallback(cleanUrl) {
-    navigator.clipboard.writeText(cleanUrl).then(() => {
-      alert("✓ Direct link copied to clipboard!\n\n" + cleanUrl);
-    }).catch(() => {
-      prompt("Copy direct material link:", cleanUrl);
-    });
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(cleanUrl).then(() => {
+        alert("✓ Link copied to clipboard!\n\n" + cleanUrl);
+      }).catch(() => {
+        legacyClipboardCopy(cleanUrl);
+      });
+    } else {
+      legacyClipboardCopy(cleanUrl);
+    }
+  }
+
+  function legacyClipboardCopy(text) {
+    try {
+      const tempTextArea = document.createElement("textarea");
+      tempTextArea.value = text;
+      tempTextArea.style.position = "fixed";
+      tempTextArea.style.left = "-999999px";
+      tempTextArea.style.top = "-999999px";
+      document.body.appendChild(tempTextArea);
+      tempTextArea.focus();
+      tempTextArea.select();
+      const successful = document.execCommand('copy');
+      document.body.removeChild(tempTextArea);
+
+      if (successful) {
+        alert("✓ Link copied to clipboard!\n\n" + text);
+      } else {
+        prompt("Copy direct link below (Ctrl+C / Cmd+C):", text);
+      }
+    } catch (err) {
+      prompt("Copy direct link below (Ctrl+C / Cmd+C):", text);
+    }
   }
 
   // ================= SECRET ADMIN ACCESS =================
@@ -1738,6 +1912,36 @@
     reader.readAsDataURL(file);
   }
 
+  // ================= ADMIN-ONLY STOCK MODIFIER =================
+  function adminEditStockPrompt(code, evt) {
+    if (evt) evt.stopPropagation();
+    if (!isAdmin) {
+      alert("Unauthorized: Admin login required.");
+      return;
+    }
+
+    const item = inventory.find(i => i.code === code);
+    if (!item) return;
+
+    const newQtyStr = prompt(`[ADMIN] Update Stock for:\n[${item.code}] ${item.name}\n\nCurrent Stock: ${item.qty} ${item.unit || 'NOS'}\nEnter New Stock Quantity:`, item.qty);
+
+    if (newQtyStr !== null && newQtyStr.trim() !== '') {
+      const newQty = parseFloat(newQtyStr);
+      if (isNaN(newQty) || newQty < 0) {
+        alert("Please enter a valid positive number.");
+        return;
+      }
+
+      item.qty = newQty;
+      localStorage.setItem('materials_catalog', JSON.stringify(inventory));
+      renderCatalog();
+      if (activeModalItem && activeModalItem.code === code) {
+        openItemModal(item);
+      }
+      alert(`✓ Stock for [${item.code}] updated to ${newQty} ${item.unit || 'NOS'} successfully!`);
+    }
+  }
+
   // ================= CATALOG RENDER & WORD-BY-WORD SEARCH =================
   function resetAndRender() {
     currentVisibleCount = ITEMS_PER_PAGE;
@@ -1778,7 +1982,7 @@
     grid.innerHTML = '';
 
     if (totalMatches === 0) {
-      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No materials found matching all search terms "${rawSearch}".</div>`;
+      grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No materials found matching "${rawSearch}".</div>`;
       loadMoreBox.style.display = 'none';
       return;
     }
@@ -1800,9 +2004,13 @@
           <span class="category-badge">${item.category}</span>
           <div class="product-title" title="${item.name}">${item.name}</div>
           <div class="product-code">Item Code: <strong>${item.code}</strong></div>
+          
+          <!-- Stock Display with Admin-Only Edit Option -->
           <div class="stock-badge ${isOut ? 'low' : (isLow ? 'low' : 'ok')}">
-            ${isOut ? '❌ Out of Stock' : (isLow ? '⚠️ Low Stock: ' + item.qty + ' ' + (item.unit || 'NOS') : '✓ In Stock: ' + item.qty + ' ' + (item.unit || 'NOS'))}
+            <span>${isOut ? '❌ Out of Stock' : (isLow ? '⚠️ Low Stock: ' + item.qty + ' ' + (item.unit || 'NOS') : '✓ In Stock: ' + item.qty + ' ' + (item.unit || 'NOS'))}</span>
+            ${isAdmin ? `<button onclick="adminEditStockPrompt('${item.code}', event)" style="padding: 2px 6px; font-size: 11px; cursor: pointer; border: 1px solid var(--border); border-radius: 3px; background: var(--input-bg); color: var(--text);">✏️ Edit Stock</button>` : ''}
           </div>
+
           <div class="card-actions" onclick="event.stopPropagation()">
             <input type="number" id="qty_${item.code}" class="qty-select" value="1" min="1" max="${Math.max(1, item.qty)}" oninput="validateCardInput(this, ${item.qty})">
             <button class="btn-add-rfq" onclick="addToCart('${item.code}')">+ Add to RFQ</button>
@@ -1971,67 +2179,68 @@
   }
 
   // ================= SUBMIT QUOTE VIA EMAIL / OUTLOOK =================
-    function submitQuoteEmail(type = 'app') {
-      const company = document.getElementById('custCompany').value.trim();
-      const name = document.getElementById('custName').value.trim();
-      const email = document.getElementById('custEmail').value.trim();
-      const phone = document.getElementById('custPhone').value.trim() || 'N/A';
+  function submitQuoteEmail(type = 'app') {
+    const company = document.getElementById('custCompany').value.trim();
+    const name = document.getElementById('custName').value.trim();
+    const email = document.getElementById('custEmail').value.trim();
+    const phone = document.getElementById('custPhone').value.trim() || 'N/A';
 
-      if (!company || !name || !email) {
-        alert("Please fill in Company Name, Contact Person, and Work Email.");
-        return;
-      }
-
-      const divider = "----------------------------------------------------------------------";
-
-      // Formats each item with clean dividers and dedicated aligned lines
-      const formattedItemList = cart.map((item, index) => {
-        const sl = String(index + 1).padStart(2, '0');
-        const code = formatSixDigitCode(item.code);
-        const desc = item.name.trim();
-        const qty = `${item.reqQty} ${item.unit || 'NOS'}`;
-
-        return [
-          `[ITEM #${sl}]`,
-          `CODE        : ${code}`,
-          `DESCRIPTION : ${desc}`,
-          `QUANTITY    : ${qty}`,
-          divider
-        ].join("\n");
-      }).join("\n");
-
-      const emailTable = `${divider}\n${formattedItemList}`;
-
-      const subjectText = `Material RFQ - ${company} (${name})`;
-      const bodyText = 
-  `Dear Sales Team,
-
-  Please provide a formal price quotation for the requested materials listed below:
-
-  ${emailTable}
-
-  ======================================================================
-  CLIENT & CONTACT DETAILS
-  ======================================================================
-  Company Name   : ${company}
-  Contact Person : ${name}
-  Work Email     : ${email}
-  Phone / Mobile : ${phone}
-
-  Thank you,
-  ${name}`;
-
-      const subject = encodeURIComponent(subjectText);
-      const body = encodeURIComponent(bodyText);
-
-      if (type === 'web') {
-        const outlookWebUrl = `https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(COMPANY_EMAIL)}&subject=${subject}&body=${body}`;
-        window.open(outlookWebUrl, '_blank');
-      } else {
-        window.location.href = `mailto:${COMPANY_EMAIL}?subject=${subject}&body=${body}`;
-      }
+    if (!company || !name || !email) {
+      alert("Please fill in Company Name, Contact Person, and Work Email.");
+      return;
     }
-  // Check URL parameters for direct Instagram / Ad Deep Links (e.g. yoursite.com/?item=004433)
+
+    const divider = "----------------------------------------------------------------------";
+
+    // Formats each item with clean dividers and dedicated aligned lines
+    const formattedItemList = cart.map((item, index) => {
+      const sl = String(index + 1).padStart(2, '0');
+      const code = formatSixDigitCode(item.code);
+      const desc = item.name.trim();
+      const qty = `${item.reqQty} ${item.unit || 'NOS'}`;
+
+      return [
+        `[ITEM #${sl}]`,
+        `CODE        : ${code}`,
+        `DESCRIPTION : ${desc}`,
+        `QUANTITY    : ${qty}`,
+        divider
+      ].join("\n");
+    }).join("\n");
+
+    const emailTable = `${divider}\n${formattedItemList}`;
+
+    const subjectText = `Material RFQ - ${company} (${name})`;
+    const bodyText = 
+`Dear Sales Team,
+
+Please provide a formal price quotation for the requested materials listed below:
+
+${emailTable}
+
+======================================================================
+CLIENT & CONTACT DETAILS
+======================================================================
+Company Name   : ${company}
+Contact Person : ${name}
+Work Email     : ${email}
+Phone / Mobile : ${phone}
+
+Thank you,
+${name}`;
+
+    const subject = encodeURIComponent(subjectText);
+    const body = encodeURIComponent(bodyText);
+
+    if (type === 'web') {
+      const outlookWebUrl = `https://outlook.office.com/mail/deeplink/compose?to=${encodeURIComponent(COMPANY_EMAIL)}&subject=${subject}&body=${body}`;
+      window.open(outlookWebUrl, '_blank');
+    } else {
+      window.location.href = `mailto:${COMPANY_EMAIL}?subject=${subject}&body=${body}`;
+    }
+  }
+
+  // Check URL parameters for direct deep links (e.g. ?item=004433)
   function checkUrlDeepLink() {
     const urlParams = new URLSearchParams(window.location.search);
     const targetCode = urlParams.get('item');
@@ -2060,6 +2269,10 @@
     } catch (e) {
       console.warn("Using fallback memory storage:", e);
     }
+    
+    // Automatically load stock.xlsx if present in repository root
+    await loadPublicStockFile();
+
     renderPrefixRulesTable();
     renderCatalog();
     checkUrlDeepLink();
