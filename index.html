@@ -368,7 +368,7 @@
     }
     .btn-add-rfq:hover { background: var(--btn-yellow-hover); }
 
-    /* Share Button */
+    /* Amazon-Style Share Button */
     .btn-amazon-share {
       width: 34px;
       height: 34px;
@@ -512,6 +512,72 @@
       align-items: center;
     }
 
+    /* Amazon-Style Share Dialog Modal */
+    .share-modal-card {
+      background: var(--modal-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 440px;
+      border-radius: 12px;
+      padding: 22px;
+      position: relative;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .share-preview-box {
+      display: flex;
+      gap: 12px;
+      padding: 12px;
+      background: var(--card-img-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      align-items: center;
+    }
+    .share-preview-thumb {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 6px;
+      padding: 4px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+    .share-options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .btn-share-option {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 12px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-img-bg);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12.5px;
+      font-weight: 600;
+      transition: all 0.15s ease;
+      text-decoration: none;
+    }
+    .btn-share-option:hover {
+      background: var(--dropdown-hover);
+      border-color: var(--nav-accent);
+      transform: translateY(-1px);
+    }
+    .btn-share-option svg {
+      width: 24px;
+      height: 24px;
+    }
+
     /* RFQ Cart Modal */
     .rfq-content {
       background: var(--modal-bg);
@@ -584,7 +650,7 @@
     }
     .btn-submit-web-outlook:hover { background: #0b5a2f; }
 
-    /* About Us & Footer Section */
+    /* Footer Section */
     footer {
       background-color: var(--footer-bg);
       color: #e5e7eb;
@@ -885,12 +951,57 @@
       <div class="modal-btn-row">
         <input type="number" id="detailQtyInput" class="qty-select" value="1" min="1">
         <button id="detailRfqBtn" class="btn-add-rfq" style="padding:9px 14px;" onclick="addModalItemToCart()">+ Add to Quote Cart</button>
-        <button class="btn-amazon-share" title="Share Material" onclick="shareDirectItem(activeModalItem.code, event)">
+        <button class="btn-amazon-share" title="Share Material with Photo & Link" onclick="shareDirectItem(activeModalItem.code, event)">
           <svg viewBox="0 0 24 24">
             <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
           </svg>
         </button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- AMAZON-STYLE RICH SHARE POPUP MODAL -->
+<div id="shareModal" class="modal" onclick="if(event.target.id === 'shareModal') closeShareModal()">
+  <div class="share-modal-card">
+    <button class="modal-close" onclick="closeShareModal()">✕</button>
+    <h3 style="font-size: 16px; font-weight: 700;">Share Material</h3>
+
+    <!-- Mini Product Preview Card -->
+    <div class="share-preview-box">
+      <img id="sharePreviewImg" class="share-preview-thumb" src="" alt="Product Photo">
+      <div style="overflow: hidden;">
+        <div id="sharePreviewCode" style="font-size: 11px; font-weight: bold; color: var(--nav-accent); font-family: monospace;">CODE: --</div>
+        <div id="sharePreviewTitle" style="font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">--</div>
+        <div id="sharePreviewStock" style="font-size: 12px; color: var(--green); font-weight: bold; margin-top: 2px;">✓ In Stock</div>
+      </div>
+    </div>
+
+    <!-- Share Destination Options -->
+    <div class="share-options-grid">
+      <!-- 1. WhatsApp Direct Share -->
+      <button class="btn-share-option" onclick="shareToWhatsApp()">
+        <svg viewBox="0 0 24 24" fill="#25D366"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zM12.05 20.21c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31c-.82-1.31-1.26-2.83-1.26-4.39 0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.23 8.24zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.17 1.74 2.65 4.21 3.71.59.25 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.1-.23-.17-.48-.29z"/></svg>
+        <span>Send WhatsApp</span>
+      </button>
+
+      <!-- 2. Download Photo Card to Post (Instagram / Status / LinkedIn) -->
+      <button class="btn-share-option" onclick="downloadProductPhotoCard()">
+        <svg viewBox="0 0 24 24" fill="#0078d4"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+        <span>Save Photo Card</span>
+      </button>
+
+      <!-- 3. Copy Link with Photo Preview text -->
+      <button class="btn-share-option" onclick="copyShareLinkOnly()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+        <span>Copy Link</span>
+      </button>
+
+      <!-- 4. Native OS Post / Direct Message Share -->
+      <button class="btn-share-option" onclick="triggerNativeShareWithPhoto()">
+        <svg viewBox="0 0 24 24" fill="var(--nav-accent)"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
+        <span>More Apps...</span>
+      </button>
     </div>
   </div>
 </div>
@@ -1224,6 +1335,7 @@
 
   let cart = [];
   let activeModalItem = null;
+  let activeShareItem = null;
 
   function handleLogoFallback(imgElement) {
     imgElement.onerror = null;
@@ -1334,7 +1446,7 @@
     resetAndRender();
   }
 
-  // ================= FAIL-SAFE SHARE & COPY ENGINE =================
+  // ================= AMAZON-STYLE RICH SHARE ENGINE WITH PHOTO & LINK =================
   function shareDirectItem(itemCode, evt) {
     if (evt) {
       evt.preventDefault();
@@ -1343,43 +1455,220 @@
 
     const formattedCode = formatSixDigitCode(itemCode);
     const item = inventory.find(i => i.code === formattedCode);
+    if (!item) return;
 
+    activeShareItem = item;
+
+    // Open Amazon-Style Rich Share Dialog
+    document.getElementById('sharePreviewImg').src = getItemImage(item);
+    document.getElementById('sharePreviewCode').innerText = `ITEM CODE: ${item.code}`;
+    document.getElementById('sharePreviewTitle').innerText = item.name;
+    document.getElementById('sharePreviewStock').innerText = item.qty > 0 ? `✓ In Stock: ${item.qty} ${item.unit || 'NOS'}` : '❌ Out of Stock';
+    document.getElementById('sharePreviewStock').style.color = item.qty > 0 ? 'var(--green)' : 'var(--red)';
+    document.getElementById('shareModal').classList.add('open');
+  }
+
+  function closeShareModal() {
+    document.getElementById('shareModal').classList.remove('open');
+    activeShareItem = null;
+  }
+
+  function getItemShareUrl(item) {
     let cleanUrl = window.location.href.split('?')[0];
-    cleanUrl += `?item=${encodeURIComponent(formattedCode)}`;
+    cleanUrl += `?item=${encodeURIComponent(item.code)}`;
+    return cleanUrl;
+  }
 
-    const shareData = {
-      title: item ? item.name : "Doha Project Stocks",
-      text: item ? `Check stock for [${formattedCode}] ${item.name} at Doha Project Stocks Qatar:` : "Industrial Material Catalog",
-      url: cleanUrl
-    };
+  // 1. Direct WhatsApp Share with formatted details and link
+  function shareToWhatsApp() {
+    if (!activeShareItem) return;
+    const item = activeShareItem;
+    const url = getItemShareUrl(item);
 
-    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
-      navigator.share(shareData).catch(err => {
-        if (err.name !== 'AbortError') {
-          copyDirectFallback(cleanUrl);
-        }
-      });
-    } else if (navigator.share) {
-      navigator.share(shareData).catch(err => {
-        if (err.name !== 'AbortError') {
-          copyDirectFallback(cleanUrl);
-        }
-      });
+    const messageText = 
+`📦 *Doha Project Stocks - Material Details*
+----------------------------------------
+*Item Code:* ${item.code}
+*Description:* ${item.name}
+*Category:* ${item.category}
+*Stock:* ${item.qty > 0 ? `${item.qty} ${item.unit || 'NOS'} (Available)` : 'Out of Stock'}
+
+🔗 *View Catalog & Request RFQ:*
+${url}`;
+
+    const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(messageText)}`;
+    window.open(waUrl, '_blank');
+  }
+
+  // 2. Generate and Download Visual Shareable Card (For Instagram/LinkedIn/Posts)
+  async function downloadProductPhotoCard() {
+    if (!activeShareItem) return;
+    const item = activeShareItem;
+
+    const canvas = await generateBrandedShareCanvas(item);
+    const imageURI = canvas.toDataURL("image/png");
+    
+    const link = document.createElement("a");
+    link.download = `DohaProject_${item.code}.png`;
+    link.href = imageURI;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  // 3. Copy Link to Clipboard
+  function copyShareLinkOnly() {
+    if (!activeShareItem) return;
+    const url = getItemShareUrl(activeShareItem);
+    
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(url).then(() => {
+        alert("✓ Material link copied to clipboard!\n\n" + url);
+      }).catch(() => legacyClipboardCopy(url));
     } else {
-      copyDirectFallback(cleanUrl);
+      legacyClipboardCopy(url);
     }
   }
 
-  function copyDirectFallback(cleanUrl) {
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard.writeText(cleanUrl).then(() => {
-        alert("✓ Link copied to clipboard!\n\n" + cleanUrl);
-      }).catch(() => {
-        legacyClipboardCopy(cleanUrl);
+  // 4. Native OS Share Sheet with Photo File (Mobile Safari / Chrome)
+  async function triggerNativeShareWithPhoto() {
+    if (!activeShareItem) return;
+    const item = activeShareItem;
+    const url = getItemShareUrl(item);
+
+    try {
+      const canvas = await generateBrandedShareCanvas(item);
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], `${item.code}.png`, { type: 'image/png' });
+        
+        const shareData = {
+          title: `[${item.code}] ${item.name}`,
+          text: `Check stock for [${item.code}] ${item.name} at Doha Project Stocks Qatar:\n${url}`,
+          url: url
+        };
+
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          await navigator.share({
+            ...shareData,
+            files: [file]
+          });
+        } else if (navigator.share) {
+          await navigator.share(shareData);
+        } else {
+          copyShareLinkOnly();
+        }
       });
-    } else {
-      legacyClipboardCopy(cleanUrl);
+    } catch (err) {
+      if (err.name !== 'AbortError') {
+        copyShareLinkOnly();
+      }
     }
+  }
+
+  // Canvas Generator for Branded Material Share Card (600x700px)
+  function generateBrandedShareCanvas(item) {
+    return new Promise((resolve) => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 600;
+      canvas.height = 700;
+      const ctx = canvas.getContext("2d");
+
+      // Card Background
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, 600, 700);
+
+      // Header Banner (Doha Brand Dark Blue)
+      ctx.fillStyle = "#131921";
+      ctx.fillRect(0, 0, 600, 70);
+
+      // Header Logo / Text
+      ctx.fillStyle = "#fcb212";
+      ctx.font = "bold 18px -apple-system, Arial, sans-serif";
+      ctx.fillText("DOHA PROJECT STOCKS", 24, 34);
+      ctx.fillStyle = "#9ca3af";
+      ctx.font = "bold 11px -apple-system, Arial, sans-serif";
+      ctx.fillText("INDUSTRIAL CATALOG & RFQ PORTAL • QATAR", 24, 52);
+
+      // Product Photo Box
+      ctx.fillStyle = "#f8fafc";
+      ctx.fillRect(24, 90, 552, 340);
+      ctx.strokeStyle = "#e2e8f0";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(24, 90, 552, 340);
+
+      const prodImg = new Image();
+      prodImg.crossOrigin = "anonymous";
+      prodImg.onload = function() {
+        // Draw centered product image
+        const aspect = prodImg.width / prodImg.height;
+        let drawW = 300;
+        let drawH = 300 / aspect;
+        if (drawH > 300) {
+          drawH = 300;
+          drawW = 300 * aspect;
+        }
+        const drawX = 24 + (552 - drawW) / 2;
+        const drawY = 90 + (340 - drawH) / 2;
+        ctx.drawImage(prodImg, drawX, drawY, drawW, drawH);
+        renderCardText();
+      };
+      prodImg.onerror = function() {
+        ctx.fillStyle = "#64748b";
+        ctx.font = "bold 16px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText("INDUSTRIAL MATERIAL", 300, 260);
+        ctx.textAlign = "start";
+        renderCardText();
+      };
+      prodImg.src = getItemImage(item);
+
+      function renderCardText() {
+        // Item Code Badge
+        ctx.fillStyle = "#2563eb";
+        ctx.font = "bold 13px monospace";
+        ctx.fillText(`ITEM CODE: ${item.code}`, 24, 465);
+
+        // Category
+        ctx.fillStyle = "#64748b";
+        ctx.font = "bold 12px Arial";
+        ctx.fillText(item.category.toUpperCase(), 24, 485);
+
+        // Product Name (wrapped up to 2 lines)
+        ctx.fillStyle = "#0f1111";
+        ctx.font = "bold 17px Arial";
+        const words = item.name.split(" ");
+        let line1 = "";
+        let line2 = "";
+        for (let n = 0; n < words.length; n++) {
+          const testLine = line1 + words[n] + " ";
+          if (ctx.measureText(testLine).width < 540 && line2 === "") {
+            line1 = testLine;
+          } else {
+            line2 += words[n] + " ";
+          }
+        }
+        ctx.fillText(line1.trim(), 24, 515);
+        if (line2) ctx.fillText(line2.trim(), 24, 538);
+
+        // Stock Status Pill
+        const isOk = item.qty > 0;
+        ctx.fillStyle = isOk ? "#007600" : "#b12704";
+        ctx.font = "bold 15px Arial";
+        ctx.fillText(isOk ? `✓ In Stock: ${item.qty} ${item.unit || 'NOS'}` : '❌ Out of Stock', 24, 580);
+
+        // Bottom Footer Bar with Direct Link Tag
+        ctx.fillStyle = "#f1f5f9";
+        ctx.fillRect(0, 630, 600, 70);
+        ctx.fillStyle = "#131921";
+        ctx.font = "bold 13px Arial";
+        ctx.fillText("Request Price & Availability Online:", 24, 658);
+        ctx.fillStyle = "#0078d4";
+        ctx.font = "bold 13px Arial";
+        ctx.fillText(getItemShareUrl(item), 24, 680);
+
+        resolve(canvas);
+      }
+    });
   }
 
   function legacyClipboardCopy(text) {
@@ -1396,7 +1685,7 @@
       document.body.removeChild(tempTextArea);
 
       if (successful) {
-        alert("✓ Link copied to clipboard!\n\n" + text);
+        alert("✓ Material link copied to clipboard!\n\n" + text);
       } else {
         prompt("Copy direct link below (Ctrl+C / Cmd+C):", text);
       }
@@ -1472,7 +1761,7 @@
           <div class="card-actions" onclick="event.stopPropagation()">
             <input type="number" id="qty_${item.code}" class="qty-select" value="1" min="1" max="${Math.max(1, item.qty)}" oninput="validateCardInput(this, ${item.qty})">
             <button class="btn-add-rfq" onclick="addToCart('${item.code}')">+ Add to RFQ</button>
-            <button class="btn-amazon-share" title="Share this item" onclick="shareDirectItem('${item.code}', event)">
+            <button class="btn-amazon-share" title="Share Photo & Link" onclick="shareDirectItem('${item.code}', event)">
               <svg viewBox="0 0 24 24">
                 <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
               </svg>
