@@ -68,8 +68,11 @@
       background-color: var(--bg);
       color: var(--text);
       transition: background-color 0.4s ease, color 0.4s ease;
+      overflow-x: hidden;
+      width: 100%;
     }
 
+    /* ================= DESKTOP HEADER LAYOUT ================= */
     header {
       background: var(--nav-bg);
       color: white;
@@ -77,7 +80,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      gap: 20px;
       position: sticky;
       top: 0;
       z-index: 100;
@@ -91,6 +94,7 @@
       gap: 10px;
       user-select: none;
       cursor: pointer;
+      flex-shrink: 0;
     }
     .header-logo-img {
       height: 40px;
@@ -109,7 +113,7 @@
     .search-container {
       flex: 1;
       display: flex;
-      max-width: 600px;
+      max-width: 650px;
     }
     .search-category {
       background: var(--input-bg);
@@ -122,6 +126,7 @@
       outline: none;
       cursor: pointer;
       font-weight: 500;
+      flex-shrink: 0;
     }
     .search-input {
       flex: 1;
@@ -132,14 +137,17 @@
       font-size: 14px;
       outline: none;
       border-radius: 0 4px 4px 0;
+      width: 100%;
     }
 
     .header-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      flex-shrink: 0;
     }
 
+    /* Desktop Sliding Pill */
     .pro-slider-container {
       display: inline-flex;
       align-items: center;
@@ -151,6 +159,7 @@
       cursor: pointer;
       user-select: none;
       height: 36px;
+      flex-shrink: 0;
     }
     .pro-slider-pill {
       position: absolute;
@@ -233,7 +242,17 @@
       gap: 8px;
       font-size: 13px;
       height: 36px;
+      position: relative;
     }
+    
+    /* Custom Cart PNG Image Icon Styling */
+    .cart-img-icon {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+      display: block;
+    }
+
     .cart-badge {
       background: #111;
       color: white;
@@ -241,11 +260,15 @@
       padding: 2px 6px;
       border-radius: 10px;
     }
+    .cart-text-desktop {
+      display: inline;
+    }
 
     .container {
       max-width: 1400px;
       margin: 20px auto;
       padding: 0 16px;
+      width: 100%;
     }
 
     .catalog-bar {
@@ -698,40 +721,194 @@
       color: #6b7280;
     }
 
-    @media (max-width: 860px) {
-      header { flex-wrap: wrap; padding: 10px 14px; gap: 10px; }
-      .logo-box { order: 1; }
-      .header-actions { order: 2; margin-left: auto; }
-      .search-container { order: 3; width: 100%; max-width: 100%; }
-      .footer-container { grid-template-columns: 1fr; gap: 28px; }
-      .submit-actions-row { flex-direction: column; }
-    }
+    /* ================= MOBILE-ONLY OVERRIDES (<= 768px) ================= */
+    @media (max-width: 768px) {
+      header {
+        flex-wrap: wrap;
+        padding: 8px 12px;
+        gap: 8px;
+      }
+      .logo-box {
+        order: 1;
+        gap: 6px;
+      }
+      .header-logo-img {
+        height: 32px;
+        max-width: 90px;
+        padding: 0;
+      }
+      .logo {
+        font-size: 14px;
+      }
+      .logo-tag {
+        font-size: 8px;
+      }
 
-    @media (max-width: 600px) {
-      .container { padding: 0 10px; margin: 12px auto; }
-      .product-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-      .product-card { height: auto; min-height: 350px; }
-      .img-wrapper { height: 140px; padding: 8px; }
-      .card-body { padding: 8px; gap: 2px; }
-      .product-title { font-size: 12.5px; height: 34px; }
-      .product-code { font-size: 11px; }
-      .stock-badge { font-size: 11.5px; margin: 2px 0 4px 0; }
-      .card-actions { gap: 4px; }
-      .qty-select { width: 44px; padding: 4px; font-size: 12px; }
-      .btn-add-rfq { font-size: 11.5px; padding: 6px 4px; }
-      .btn-amazon-share { width: 30px; height: 30px; }
-      .item-modal-content { flex-direction: column; max-height: 90vh; overflow-y: auto; }
-      .item-modal-img { width: 100%; min-height: 180px; height: 180px; padding: 12px; border-right: none; border-bottom: 1px solid var(--border); }
-      .item-modal-info { width: 100%; padding: 16px; }
-      .customer-form { grid-template-columns: 1fr; padding: 10px; }
-      .rfq-content { padding: 16px; }
+      /* Compact Right Corner Controls */
+      .header-actions {
+        order: 2;
+        margin-left: auto;
+        gap: 6px;
+      }
+      
+      /* Small Slide Switcher in Corner */
+      .pro-slider-container {
+        height: 28px;
+        border-radius: 14px;
+        padding: 2px;
+      }
+      .pro-slider-pill {
+        width: 32px;
+        height: 22px;
+        border-radius: 11px;
+        top: 2px;
+        left: 2px;
+      }
+      [data-theme="dark"] .pro-slider-pill {
+        transform: translateX(32px);
+      }
+      .pro-slider-btn {
+        width: 32px;
+        height: 22px;
+        font-size: 0;
+        padding: 0;
+      }
+      .pro-slider-btn svg {
+        width: 13px;
+        height: 13px;
+      }
+
+      /* Cart Button on Mobile */
+      .btn-cart {
+        padding: 6px 10px;
+        height: 30px;
+        border-radius: 6px;
+        gap: 4px;
+      }
+      .cart-img-icon {
+        width: 22px;
+        height: 22px;
+      }
+      .cart-text-desktop {
+        display: none;
+      }
+      .cart-badge {
+        font-size: 10px;
+        padding: 1px 5px;
+        position: relative;
+        top: -4px;
+        margin-left: -2px;
+      }
+
+      /* Full Width Search Bar on Mobile */
+      .search-container {
+        order: 3;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 2px;
+      }
+      .search-category {
+        padding: 8px 6px;
+        font-size: 12px;
+        max-width: 105px;
+      }
+      .search-input {
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+
+      /* Product Grid on Mobile */
+      .container {
+        padding: 0 10px;
+        margin: 10px auto;
+      }
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+      .product-card {
+        height: auto;
+        min-height: 330px;
+      }
+      .img-wrapper {
+        height: 130px;
+        padding: 6px;
+      }
+      .card-body {
+        padding: 8px 6px;
+        gap: 2px;
+      }
+      .product-title {
+        font-size: 12px;
+        height: 32px;
+        line-height: 1.3;
+      }
+      .product-code {
+        font-size: 10.5px;
+      }
+      .stock-badge {
+        font-size: 11px;
+        margin: 2px 0 4px 0;
+      }
+      .card-actions {
+        gap: 4px;
+      }
+      .qty-select {
+        width: 38px;
+        padding: 4px 2px;
+        font-size: 11px;
+      }
+      .btn-add-rfq {
+        font-size: 11px;
+        padding: 6px 2px;
+      }
+      .btn-amazon-share {
+        width: 28px;
+        height: 28px;
+      }
+      .btn-amazon-share svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      .item-modal-content {
+        flex-direction: column;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .item-modal-img {
+        width: 100%;
+        min-height: 180px;
+        height: 180px;
+        padding: 12px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+      .item-modal-info {
+        width: 100%;
+        padding: 14px;
+      }
+      .customer-form {
+        grid-template-columns: 1fr;
+        padding: 10px;
+      }
+      .rfq-content {
+        padding: 16px 12px;
+      }
+      .footer-container {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+      .submit-actions-row {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <!-- Triple-click logo or press Ctrl+Shift+A for Admin -->
+  <!-- Logo Section -->
   <div class="logo-box" id="secretLogoTrigger" title="Doha Project Stocks">
     <img class="header-logo-img" src="images/dp1.png" alt="Doha Project Logo" onerror="handleLogoFallback(this)">
     <div class="logo-text-group">
@@ -740,6 +917,7 @@
     </div>
   </div>
 
+  <!-- Search Bar -->
   <div class="search-container">
     <select id="categoryFilter" class="search-category" onchange="resetAndRender()">
       <option value="All">All Categories</option>
@@ -759,17 +937,18 @@
     >
   </div>
 
+  <!-- Header Right Actions -->
   <div class="header-actions">
-    <!-- Theme Switcher -->
+    <!-- Light/Dark Slide Switcher -->
     <div class="pro-slider-container" onclick="handleSliderClick(event)" title="Slide to Switch Light / Dark Mode">
       <div class="pro-slider-pill"></div>
       <button class="pro-slider-btn btn-light-mode" onclick="setThemeDirect('light', event)">
         <svg viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
-        Light
+        <span class="cart-text-desktop">Light</span>
       </button>
       <button class="pro-slider-btn btn-dark-mode" onclick="setThemeDirect('dark', event)">
         <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
-        Dark
+        <span class="cart-text-desktop">Dark</span>
       </button>
     </div>
 
@@ -781,8 +960,10 @@
 
     <button id="btnExitAdmin" class="btn-exit-admin" onclick="exitAdminMode()">Exit Admin</button>
 
-    <button class="btn-cart" onclick="openCartModal()">
-      <span>🛒 Quote Cart</span>
+    <!-- Quote Cart Button with cart.png icon -->
+    <button class="btn-cart" onclick="openCartModal()" title="View Quote Cart">
+      <img src="images/cart.png" alt="Cart" class="cart-img-icon" onerror="this.onerror=null; this.src='cart.png';">
+      <span class="cart-text-desktop">Quote Cart</span>
       <span class="cart-badge" id="cartCount">0</span>
     </button>
   </div>
@@ -1458,7 +1639,7 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        await new Promise(r => setTimeout(r, 450)); // Sequential slide download gap
+        await new Promise(r => setTimeout(r, 450));
       }
     } else if (activeShareItem) {
       const canvas = await generateSlideCardCanvas(activeShareItem, 1, 1);
@@ -1522,7 +1703,6 @@
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, 1080, 1080);
 
-    // Subtle Clean Gradient
     const bgGradient = ctx.createLinearGradient(0, 0, 1080, 1080);
     bgGradient.addColorStop(0, "#ffffff");
     bgGradient.addColorStop(0.5, "#f8fafc");
@@ -1530,7 +1710,6 @@
     ctx.fillStyle = bgGradient;
     ctx.fillRect(0, 0, 1080, 1080);
 
-    // Outer Poster Border
     ctx.strokeStyle = "#e2e8f0";
     ctx.lineWidth = 4;
     ctx.strokeRect(16, 16, 1048, 1048);
@@ -1545,7 +1724,6 @@
     const brandWidth = ctx.measureText("DOHA PROJECT ").width;
     ctx.fillText("STOCKS", 60 + brandWidth, 90);
 
-    // Country Tag Badge
     drawRoundedRect(ctx, 60 + brandWidth + 170, 60, 96, 38, 8, "#0f172a");
     ctx.fillStyle = "#ffffff";
     ctx.font = "bold 16px Arial, sans-serif";
@@ -1553,7 +1731,6 @@
     ctx.fillText("QATAR", 60 + brandWidth + 218, 85);
     ctx.textAlign = "start";
 
-    // Category Tag Pill
     drawRoundedRect(ctx, 60, 115, 260, 36, 18, "#ffffff");
     ctx.strokeStyle = "#cbd5e1";
     ctx.lineWidth = 1.5;
@@ -1562,7 +1739,6 @@
     ctx.font = "bold 13.5px Arial, sans-serif";
     ctx.fillText(`●  ${item.category.toUpperCase()}`, 78, 138);
 
-    // Slide Counter Indicator (e.g. 1/4)
     if (totalSlides > 1) {
       drawRoundedRect(ctx, 930, 60, 90, 38, 19, "#0f172a");
       ctx.fillStyle = "#ffffff";
@@ -1572,21 +1748,18 @@
       ctx.textAlign = "start";
     }
 
-    // 3. NO-COLOR PURE CLEAN CARD FRAME (Replaced orange backdrop)
-    // Clean White / Frosted Soft Shadow Box
+    // 3. NO-COLOR PURE CLEAN CARD FRAME
     ctx.fillStyle = "#ffffff";
     drawRoundedRect(ctx, 160, 200, 760, 480, 24, "#ffffff");
     ctx.strokeStyle = "#e2e8f0";
     ctx.lineWidth = 2;
     ctx.strokeRoundedRect(ctx, 160, 200, 760, 480, 24);
 
-    // Subtle inner grid pedestal
     const innerPedestal = ctx.createLinearGradient(160, 560, 160, 680);
     innerPedestal.addColorStop(0, "rgba(241, 245, 249, 0)");
     innerPedestal.addColorStop(1, "rgba(241, 245, 249, 0.7)");
     drawRoundedRect(ctx, 160, 560, 760, 120, 24, innerPedestal);
 
-    // Product Photo
     const img = await loadImageElementClean(getItemImage(item));
     const aspect = img.width / img.height;
     let drawW = 540;
@@ -1598,7 +1771,6 @@
     ctx.shadowOffsetY = 14;
     ctx.drawImage(img, 160 + (760 - drawW) / 2, 200 + (480 - drawH) / 2, drawW, drawH);
 
-    // Reset shadow
     ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
     ctx.shadowOffsetY = 0;
@@ -1611,7 +1783,6 @@
     ctx.font = "bold 24px monospace";
     ctx.fillText(item.code, 190, 745);
 
-    // Product Full Description (Up to 2 lines)
     ctx.fillStyle = "#0f172a";
     ctx.font = "bold 32px Arial, sans-serif";
     const words = item.name.split(" ");
@@ -1624,13 +1795,11 @@
     ctx.fillText(line1.trim(), 60, 800);
     if (line2) ctx.fillText(line2.trim(), 60, 842);
 
-    // Stock Status Text
     const isOk = item.qty > 0;
     ctx.fillStyle = isOk ? "#007600" : "#b12704";
     ctx.font = "900 36px Arial, sans-serif";
     ctx.fillText(isOk ? `✓ In Stock: ${item.qty} ${item.unit || 'NOS'}` : '❌ Out of Stock', 60, line2 ? 905 : 880);
 
-    // CTA Button
     const ctaY = line2 ? 935 : 915;
     drawRoundedRect(ctx, 60, ctaY, 260, 68, 12, "#0f172a");
     ctx.fillStyle = "#ffffff";
@@ -1639,12 +1808,10 @@
     ctx.fillText("Inquire Now  ▸", 190, ctaY + 43);
     ctx.textAlign = "start";
 
-    // Bottom Subtext
     ctx.fillStyle = "#64748b";
     ctx.font = "16px Arial, sans-serif";
     ctx.fillText("*Formal Quotations & Mill Test Certificates Provided", 60, 1030);
 
-    // Live URL
     ctx.fillStyle = "#0078d4";
     ctx.font = "bold 18px Arial, sans-serif";
     ctx.textAlign = "right";
@@ -1702,7 +1869,6 @@
     }
   }
 
-  // ================= CATALOG RENDER =================
   function resetAndRender() {
     currentVisibleCount = ITEMS_PER_PAGE;
     renderCatalog();
