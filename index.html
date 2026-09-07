@@ -3,9 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Doha Project Stocks</title>
-  <meta name="description" content="Doha Project Stocks - Stock management and inventory system.">
-  <meta name="google-site-verification" content="pzUIrGDZqGwRqpu9OJaSIwpDeWd1ufncMEwFv9CYYnI" />
+  <title>Doha Project Stocks - Industrial Catalog & RFQ</title>
   
   <!-- SheetJS to parse stock spreadsheet directly in browser -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -247,7 +245,6 @@
       position: relative;
     }
     
-    /* Custom Cart PNG Image Icon Styling */
     .cart-img-icon {
       width: 32px;
       height: 32px;
@@ -313,7 +310,7 @@
       transition: transform 0.15s ease, box-shadow 0.15s ease;
       position: relative;
       cursor: pointer;
-      height: 410px;
+      min-height: 380px;
     }
     .product-card:hover {
       transform: translateY(-2px);
@@ -322,7 +319,7 @@
     
     .img-wrapper {
       width: 100%;
-      height: 200px;
+      height: 180px;
       background: var(--card-img-bg);
       display: flex;
       align-items: center;
@@ -357,7 +354,7 @@
       display: flex;
       flex-direction: column;
       flex: 1;
-      gap: 4px;
+      gap: 6px;
     }
     .category-badge {
       font-size: 11px;
@@ -371,7 +368,7 @@
       font-weight: 600;
       color: var(--text);
       line-height: 1.35;
-      height: 36px;
+      min-height: 36px;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -386,9 +383,9 @@
       font-weight: 600;
     }
     .stock-badge {
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: bold;
-      margin: 4px 0 6px 0;
+      margin: 2px 0 4px 0;
     }
     .stock-badge.ok { color: var(--green); }
     .stock-badge.low { color: var(--red); }
@@ -798,8 +795,8 @@
         font-size: 10px;
         padding: 1px 5px;
         position: relative;
-        top: -4px;
-        margin-left: -2px;
+        top: -2px;
+        margin-left: 0px;
       }
 
       /* Full Width Search Bar on Mobile */
@@ -821,7 +818,7 @@
 
       /* Product Grid on Mobile */
       .container {
-        padding: 0 10px;
+        padding: 0 8px;
         margin: 10px auto;
       }
       .product-grid {
@@ -830,38 +827,38 @@
       }
       .product-card {
         height: auto;
-        min-height: 330px;
+        min-height: 290px;
       }
       .img-wrapper {
-        height: 130px;
+        height: 120px;
         padding: 6px;
       }
       .card-body {
         padding: 8px 6px;
-        gap: 2px;
+        gap: 4px;
       }
       .product-title {
-        font-size: 12px;
-        height: 32px;
-        line-height: 1.3;
+        font-size: 11.5px;
+        min-height: 30px;
+        line-height: 1.25;
       }
       .product-code {
-        font-size: 10.5px;
+        font-size: 10px;
       }
       .stock-badge {
-        font-size: 11px;
-        margin: 2px 0 4px 0;
+        font-size: 10.5px;
+        margin: 2px 0;
       }
       .card-actions {
         gap: 4px;
       }
       .qty-select {
-        width: 38px;
+        width: 36px;
         padding: 4px 2px;
         font-size: 11px;
       }
       .btn-add-rfq {
-        font-size: 11px;
+        font-size: 10.5px;
         padding: 6px 2px;
       }
       .btn-amazon-share {
@@ -1312,7 +1309,8 @@
     'BAR ANGLE': 'images/bar angle.png'
   };
 
-  const ITEMS_PER_PAGE = 60;
+  const isMobile = window.innerWidth <= 768;
+  const ITEMS_PER_PAGE = isMobile ? 30 : 60;
   let currentVisibleCount = ITEMS_PER_PAGE;
   let activeFilteredList = [];
 
@@ -1411,9 +1409,11 @@
         const parsedItems = [];
         rows.forEach(row => {
           const cleanRow = {};
-          Object.keys(row).forEach(k => { cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k]; });
+          Object.keys(row).forEach(k => { 
+            cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k]; 
+          });
 
-          const rawCode = cleanRow['item code'] || cleanRow['code'] || cleanRow['item no'] || cleanRow['part no'] || '';
+          const rawCode = cleanRow['item code'] || cleanRow['code'] || cleanRow['item no'] || cleanRow['part no'] || cleanRow['item_code'] || '';
           const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['item desc'] || cleanRow['name'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
           const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || cleanRow['balance qty'] || 0);
           const unit = String(cleanRow['unit'] || cleanRow['uom'] || 'NOS').trim();
@@ -1496,7 +1496,6 @@
     resetAndRender();
   }
 
-  // ================= MULTI-SELECTION (ADMIN ONLY) =================
   function toggleItemSelection(code, evt) {
     evt.stopPropagation();
     if (selectedItemsForPost.has(code)) {
@@ -1576,7 +1575,6 @@
     });
   }
 
-  // ================= AMAZON / POSTER STYLE SLIDE GENERATOR =================
   function shareDirectItem(itemCode, evt) {
     if (evt) { evt.preventDefault(); evt.stopPropagation(); }
     const formattedCode = formatSixDigitCode(itemCode);
@@ -1627,7 +1625,6 @@
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(messageText)}`, '_blank');
   }
 
-  // Generate & Download Carousel Slides One-by-One
   async function downloadProductPhotoCard() {
     if (isMultiPostMode) {
       const items = Array.from(selectedItemsForPost).map(code => inventory.find(i => i.code === code)).filter(Boolean);
@@ -1694,14 +1691,12 @@
     }
   }
 
-  // ================= MODERN PROMOTIONAL POSTER / CAROUSEL SLIDE GENERATOR (1080x1080px) =================
   async function generateSlideCardCanvas(item, slideIndex = 1, totalSlides = 1) {
     const canvas = document.createElement("canvas");
     canvas.width = 1080;
     canvas.height = 1080;
     const ctx = canvas.getContext("2d");
 
-    // 1. Clean White Base Canvas
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, 1080, 1080);
 
@@ -1716,7 +1711,6 @@
     ctx.lineWidth = 4;
     ctx.strokeRect(16, 16, 1048, 1048);
 
-    // 2. TOP BRAND HEADER
     ctx.fillStyle = "#0f172a";
     ctx.font = "900 36px Arial, sans-serif";
     ctx.fillText("DOHA PROJECT", 60, 90);
@@ -1750,7 +1744,6 @@
       ctx.textAlign = "start";
     }
 
-    // 3. NO-COLOR PURE CLEAN CARD FRAME
     ctx.fillStyle = "#ffffff";
     drawRoundedRect(ctx, 160, 200, 760, 480, 24, "#ffffff");
     ctx.strokeStyle = "#e2e8f0";
@@ -1777,7 +1770,6 @@
     ctx.shadowBlur = 0;
     ctx.shadowOffsetY = 0;
 
-    // 4. BOTTOM PRODUCT INFO & CTA
     ctx.fillStyle = "#64748b";
     ctx.font = "bold 20px Arial, sans-serif";
     ctx.fillText("ITEM CODE:", 60, 745);
@@ -1882,12 +1874,12 @@
   }
 
   function renderCatalog() {
-    const rawSearch = document.getElementById('searchQuery').value.trim().toLowerCase();
+    const rawSearch = document.getElementById('searchQuery').value.trim().toLowerCase().replace(/[\u00a0\s]+/g, ' ');
     const cat = document.getElementById('categoryFilter').value;
     const grid = document.getElementById('productGrid');
     const loadMoreBox = document.getElementById('loadMoreContainer');
 
-    const searchTerms = rawSearch ? rawSearch.split(/\s+/).filter(t => t.length > 0) : [];
+    const searchTerms = rawSearch ? rawSearch.split(' ').filter(t => t.length > 0) : [];
 
     activeFilteredList = inventory.filter(item => {
       const matchCat = (cat === 'All' || item.category === cat);
@@ -1895,7 +1887,7 @@
       if (searchTerms.length === 0) return true;
 
       const rawCode = item.code.replace(/^0+/, '');
-      const itemSearchableText = `${item.code} ${rawCode} ${item.name} ${item.category}`.toLowerCase();
+      const itemSearchableText = `${item.code} ${rawCode} ${item.name} ${item.category}`.toLowerCase().replace(/[\u00a0\s]+/g, ' ');
       return searchTerms.every(term => itemSearchableText.includes(term));
     });
 
@@ -1912,6 +1904,8 @@
       loadMoreBox.style.display = 'none';
       return;
     }
+
+    const fragment = document.createDocumentFragment();
 
     itemsToDisplay.forEach(item => {
       const isLow = item.qty <= 2;
@@ -1931,13 +1925,13 @@
         <div class="card-body">
           <span class="category-badge">${item.category}</span>
           <div class="product-title" title="${item.name}">${item.name}</div>
-          <div class="product-code">Item Code: <strong>${item.code}</strong></div>
+          <div class="product-code">Code: <strong>${item.code}</strong></div>
           <div class="stock-badge ${isOut ? 'low' : (isLow ? 'low' : 'ok')}">
-            ${isOut ? '❌ Out of Stock' : (isLow ? '⚠️ Low Stock: ' + item.qty + ' ' + (item.unit || 'NOS') : '✓ In Stock: ' + item.qty + ' ' + (item.unit || 'NOS'))}
+            ${isOut ? '❌ Out of Stock' : (isLow ? '⚠️ Low Stock: ' + item.qty + ' ' + (item.unit || 'NOS') : '✓ Stock: ' + item.qty + ' ' + (item.unit || 'NOS'))}
           </div>
           <div class="card-actions" onclick="event.stopPropagation()">
             <input type="number" id="qty_${item.code}" class="qty-select" value="1" min="1" max="${Math.max(1, item.qty)}" oninput="validateCardInput(this, ${item.qty})">
-            <button class="btn-add-rfq" onclick="addToCart('${item.code}')">+ Add to RFQ</button>
+            <button class="btn-add-rfq" onclick="addToCart('${item.code}')">+ RFQ</button>
             <button class="btn-amazon-share" title="Share Photo Card & Link" onclick="shareDirectItem('${item.code}', event)">
               <svg viewBox="0 0 24 24">
                 <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
@@ -1946,9 +1940,10 @@
           </div>
         </div>
       `;
-      grid.appendChild(card);
+      fragment.appendChild(card);
     });
 
+    grid.appendChild(fragment);
     loadMoreBox.style.display = currentVisibleCount < totalMatches ? 'flex' : 'none';
   }
 
