@@ -943,7 +943,7 @@
     <div class="pro-slider-container" onclick="handleSliderClick(event)" title="Slide to Switch Light / Dark Mode">
       <div class="pro-slider-pill"></div>
       <button class="pro-slider-btn btn-light-mode" onclick="setThemeDirect('light', event)">
-        <svg viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-.45 1-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.36c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z"/></svg>
         <span class="cart-text-desktop">Light</span>
       </button>
       <button class="pro-slider-btn btn-dark-mode" onclick="setThemeDirect('dark', event)">
@@ -1394,16 +1394,47 @@
     alert("Exited Admin Mode.");
   }
 
+  // Simple CSV Line Parser fallback for Mobile Browsers
+  function parseCSVFallback(text) {
+    const lines = text.split(/\r\n|\n/);
+    const result = [];
+    if (lines.length < 2) return result;
+    
+    const headers = lines[0].split(',').map(h => h.replace(/^["']|["']$/g, '').trim().toLowerCase());
+    for (let i = 1; i < lines.length; i++) {
+      if (!lines[i].trim()) continue;
+      const values = lines[i].split(',').map(v => v.replace(/^["']|["']$/g, '').trim());
+      const row = {};
+      headers.forEach((h, idx) => { row[h] = values[idx] || ''; });
+      result.push(row);
+    }
+    return result;
+  }
+
   async function loadPublicStockFile() {
     try {
+      // Added cache-busting timestamp + cors headers compatibility for Mobile Safari / Chrome
       const fetchUrl = `${GOOGLE_SHEET_CSV_URL}&_t=${Date.now()}`;
-      const response = await fetch(fetchUrl);
-      if (!response.ok) return;
+      const response = await fetch(fetchUrl, {
+        method: 'GET',
+        headers: { 'Accept': 'text/csv, text/plain, */*' },
+        mode: 'cors',
+        cache: 'no-store'
+      });
+
+      if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
 
       const csvText = await response.text();
-      const workbook = XLSX.read(csvText, { type: 'string' });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+      let rows = [];
+
+      try {
+        const workbook = XLSX.read(csvText, { type: 'string' });
+        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+        rows = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+      } catch (xlsxErr) {
+        console.warn("SheetJS parse failed on mobile, using standard CSV parser fallback.", xlsxErr);
+        rows = parseCSVFallback(csvText);
+      }
 
       if (rows && rows.length > 0) {
         const parsedItems = [];
@@ -1411,9 +1442,9 @@
           const cleanRow = {};
           Object.keys(row).forEach(k => { cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k]; });
 
-          const rawCode = cleanRow['item code'] || cleanRow['code'] || cleanRow['item no'] || cleanRow['part no'] || '';
-          const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['item desc'] || cleanRow['name'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
-          const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || cleanRow['balance qty'] || 0);
+          const rawCode = cleanRow['item code'] || cleanRow['code'] || cleanRow['item no'] || cleanRow['part no'] || cleanRow['itemcode'] || '';
+          const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['item desc'] || cleanRow['name'] || cleanRow['desc'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
+          const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || cleanRow['balance qty'] || cleanRow['balance stock'] || 0);
           const unit = String(cleanRow['unit'] || cleanRow['uom'] || 'NOS').trim();
           const imgUrl = cleanRow['image'] || cleanRow['image url'] || cleanRow['photo'] || cleanRow['img'] || '';
 
@@ -1436,7 +1467,11 @@
         }
       }
     } catch (err) {
-      console.log("Could not load Google Sheet feed, loading cached storage.", err);
+      console.log("Could not load Google Sheet feed dynamically on mobile. Loading cached stock...", err);
+      if (localStorage.getItem('materials_catalog')) {
+        inventory = JSON.parse(localStorage.getItem('materials_catalog'));
+        resetAndRender();
+      }
     }
   }
 
