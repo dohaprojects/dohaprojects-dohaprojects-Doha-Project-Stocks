@@ -127,7 +127,6 @@
       cursor: pointer;
       font-weight: 500;
       flex-shrink: 0;
-      max-width: 160px;
     }
     .search-input {
       flex: 1;
@@ -246,6 +245,7 @@
       position: relative;
     }
     
+    /* Custom Cart PNG Image Icon Styling */
     .cart-img-icon {
       width: 32px;
       height: 32px;
@@ -281,6 +281,7 @@
     }
     .count-text { color: var(--text-muted); font-size: 14px; font-weight: 500; }
 
+    /* Selection Banner */
     .selection-banner {
       background: #1e293b;
       color: #ffffff;
@@ -743,12 +744,14 @@
         font-size: 8px;
       }
 
+      /* Compact Right Corner Controls */
       .header-actions {
         order: 2;
         margin-left: auto;
         gap: 6px;
       }
       
+      /* Small Slide Switcher in Corner */
       .pro-slider-container {
         height: 28px;
         border-radius: 14px;
@@ -775,6 +778,7 @@
         height: 13px;
       }
 
+      /* Cart Button on Mobile */
       .btn-cart {
         padding: 6px 10px;
         height: 30px;
@@ -796,6 +800,7 @@
         margin-left: -2px;
       }
 
+      /* Full Width Search Bar on Mobile */
       .search-container {
         order: 3;
         width: 100%;
@@ -805,13 +810,14 @@
       .search-category {
         padding: 8px 6px;
         font-size: 12px;
-        max-width: 115px;
+        max-width: 105px;
       }
       .search-input {
         padding: 8px 10px;
         font-size: 13px;
       }
 
+      /* Product Grid on Mobile */
       .container {
         padding: 0 10px;
         margin: 10px auto;
@@ -911,10 +917,16 @@
     </div>
   </div>
 
-  <!-- Dynamic Search Bar & Category Filter -->
+  <!-- Search Bar -->
   <div class="search-container">
     <select id="categoryFilter" class="search-category" onchange="resetAndRender()">
       <option value="All">All Categories</option>
+      <option value="Pipes">Pipes</option>
+      <option value="Fittings">Fittings</option>
+      <option value="Flanges">Flanges</option>
+      <option value="Valves">Valves</option>
+      <option value="Fasteners & Gaskets">Fasteners & Gaskets</option>
+      <option value="Other Products">Other Products</option>
     </select>
     <input 
       type="text" 
@@ -948,7 +960,7 @@
 
     <button id="btnExitAdmin" class="btn-exit-admin" onclick="exitAdminMode()">Exit Admin</button>
 
-    <!-- Quote Cart Button -->
+    <!-- Quote Cart Button with cart.png icon -->
     <button class="btn-cart" onclick="openCartModal()" title="View Quote Cart">
       <img src="images/CART.png" alt="Cart" class="cart-img-icon" onerror="this.onerror=null; this.src='cart.png';">
       <span class="cart-text-desktop">Quote Cart</span>
@@ -1023,7 +1035,7 @@
   </div>
 </div>
 
-<!-- SHARE POPUP MODAL -->
+<!-- RICH SHARE POPUP MODAL (Single Item & Carousel Slides) -->
 <div id="shareModal" class="modal" onclick="if(event.target.id === 'shareModal') closeShareModal()">
   <div class="share-modal-card">
     <button class="modal-close" onclick="closeShareModal()">✕</button>
@@ -1047,21 +1059,25 @@
 
     <!-- Share Destination Options -->
     <div class="share-options-grid">
+      <!-- 1. Send via WhatsApp -->
       <button class="btn-share-option" onclick="shareToWhatsApp()">
         <svg viewBox="0 0 24 24" fill="#25D366"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zM12.05 20.21c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31c-.82-1.31-1.26-2.83-1.26-4.39 0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.23 8.24zm4.52-6.17c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.39-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31-.22.25-.86.84-.86 2.05s.88 2.38 1 2.54c.12.17 1.74 2.65 4.21 3.71.59.25 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.07-.1-.23-.17-.48-.29z"/></svg>
         <span>WhatsApp</span>
       </button>
 
+      <!-- 2. Save Instagram Carousel Slides (One-by-One) -->
       <button class="btn-share-option" onclick="downloadProductPhotoCard()">
         <svg viewBox="0 0 24 24" fill="#E1306C"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         <span id="saveCardBtnLabel">Save Slide Card</span>
       </button>
 
+      <!-- 3. Copy Link -->
       <button class="btn-share-option" onclick="copyShareLinkOnly()">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
         <span>Copy Link</span>
       </button>
 
+      <!-- 4. Post via Mobile Share Sheet -->
       <button class="btn-share-option" onclick="triggerNativeShareWithPhoto()">
         <svg viewBox="0 0 24 24" fill="var(--nav-accent)"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg>
         <span>Post to Apps</span>
@@ -1130,8 +1146,13 @@
 
     <div class="footer-col">
       <h3>Our Products</h3>
-      <ul class="footer-products-list" id="footerProductsList">
-        <!-- Dynamically generated from categories -->
+      <ul class="footer-products-list">
+        <li><a onclick="filterByFooterCategory('Pipes')">▸ Pipes</a></li>
+        <li><a onclick="filterByFooterCategory('Fittings')">▸ Fittings</a></li>
+        <li><a onclick="filterByFooterCategory('Flanges')">▸ Flanges</a></li>
+        <li><a onclick="filterByFooterCategory('Valves')">▸ Valves</a></li>
+        <li><a onclick="filterByFooterCategory('Fasteners & Gaskets')">▸ Fasteners & Gaskets</a></li>
+        <li><a onclick="filterByFooterCategory('Other Products')">▸ Other Products</a></li>
       </ul>
     </div>
 
@@ -1281,6 +1302,7 @@
     'UNION': 'images/union.png',
     'TEE UNION': 'images/tee union.png',
     'ELBOW UNION': 'images/elbow union (1).png',
+    'NIPPLE HEX': 'images/nipple hex.png',
     'NIPPLE RED HEX': 'images/nipple red hex.png',
     'NIPPLE CLOSE': 'images/nipple close (1).png',
     'BEAM': 'images/beam.png',
@@ -1313,51 +1335,11 @@
   ];
 
   let inventory = JSON.parse(localStorage.getItem('materials_catalog')) || initialItems;
-  
-  function processInventoryData() {
-    inventory.forEach(i => { 
-      i.code = formatSixDigitCode(i.code);
-      i.name = String(i.name || '').replace(/[\u00a0\s]+/g, ' ').trim();
-      if (!i.category || i.category === 'Other Products') {
-        i.category = detectCategory(i.name);
-      }
-    });
-    populateCategoryDropdowns();
-  }
-
-  function populateCategoryDropdowns() {
-    const categoriesSet = new Set();
-    inventory.forEach(item => {
-      if (item.category) categoriesSet.add(item.category);
-    });
-
-    const sortedCategories = Array.from(categoriesSet).sort();
-    const selectElem = document.getElementById('categoryFilter');
-    const footerListElem = document.getElementById('footerProductsList');
-
-    const currentSelected = selectElem.value || 'All';
-    selectElem.innerHTML = '<option value="All">All Categories</option>';
-    if (footerListElem) footerListElem.innerHTML = '';
-
-    sortedCategories.forEach(cat => {
-      const opt = document.createElement('option');
-      opt.value = cat;
-      opt.textContent = cat;
-      selectElem.appendChild(opt);
-
-      if (footerListElem) {
-        const li = document.createElement('li');
-        li.innerHTML = `<a onclick="filterByFooterCategory('${cat}')">▸ ${cat}</a>`;
-        footerListElem.appendChild(li);
-      }
-    });
-
-    if (categoriesSet.has(currentSelected)) {
-      selectElem.value = currentSelected;
-    } else {
-      selectElem.value = 'All';
-    }
-  }
+  inventory.forEach(i => { 
+    i.code = formatSixDigitCode(i.code);
+    i.name = String(i.name || '').replace(/[\u00a0\s]+/g, ' ').trim();
+    i.category = detectCategory(i.name);
+  });
 
   let cart = [];
   let selectedItemsForPost = new Set();
@@ -1365,6 +1347,7 @@
   let activeShareItem = null;
   let isMultiPostMode = false;
 
+  // ================= SECRET ADMIN LOGIN / TOGGLE =================
   let clickCount = 0;
   let clickTimer = null;
   document.getElementById('secretLogoTrigger').addEventListener('click', () => {
@@ -1430,7 +1413,6 @@
 
           const rawCode = cleanRow['item code'] || cleanRow['code'] || cleanRow['item no'] || cleanRow['part no'] || '';
           const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['item desc'] || cleanRow['name'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
-          const rawCat = cleanRow['category'] || cleanRow['cat'] || cleanRow['group'] || '';
           const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || cleanRow['balance qty'] || 0);
           const unit = String(cleanRow['unit'] || cleanRow['uom'] || 'NOS').trim();
           const imgUrl = cleanRow['image'] || cleanRow['image url'] || cleanRow['photo'] || cleanRow['img'] || '';
@@ -1439,7 +1421,7 @@
             parsedItems.push({
               code: formatSixDigitCode(rawCode),
               name: name,
-              category: rawCat ? String(rawCat).trim() : detectCategory(name),
+              category: detectCategory(name),
               qty: isNaN(stock) ? 0 : stock,
               unit: unit,
               image: imgUrl
@@ -1450,7 +1432,6 @@
         if (parsedItems.length > 0) {
           inventory = parsedItems;
           localStorage.setItem('materials_catalog', JSON.stringify(inventory));
-          processInventoryData();
           resetAndRender();
         }
       }
@@ -1513,6 +1494,7 @@
     resetAndRender();
   }
 
+  // ================= MULTI-SELECTION (ADMIN ONLY) =================
   function toggleItemSelection(code, evt) {
     evt.stopPropagation();
     if (selectedItemsForPost.has(code)) {
@@ -1592,6 +1574,7 @@
     });
   }
 
+  // ================= AMAZON / POSTER STYLE SLIDE GENERATOR =================
   function shareDirectItem(itemCode, evt) {
     if (evt) { evt.preventDefault(); evt.stopPropagation(); }
     const formattedCode = formatSixDigitCode(itemCode);
@@ -1642,6 +1625,7 @@
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(messageText)}`, '_blank');
   }
 
+  // Generate & Download Carousel Slides One-by-One
   async function downloadProductPhotoCard() {
     if (isMultiPostMode) {
       const items = Array.from(selectedItemsForPost).map(code => inventory.find(i => i.code === code)).filter(Boolean);
@@ -1708,12 +1692,14 @@
     }
   }
 
+  // ================= MODERN PROMOTIONAL POSTER / CAROUSEL SLIDE GENERATOR (1080x1080px) =================
   async function generateSlideCardCanvas(item, slideIndex = 1, totalSlides = 1) {
     const canvas = document.createElement("canvas");
     canvas.width = 1080;
     canvas.height = 1080;
     const ctx = canvas.getContext("2d");
 
+    // 1. Clean White Base Canvas
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, 1080, 1080);
 
@@ -1728,6 +1714,7 @@
     ctx.lineWidth = 4;
     ctx.strokeRect(16, 16, 1048, 1048);
 
+    // 2. TOP BRAND HEADER
     ctx.fillStyle = "#0f172a";
     ctx.font = "900 36px Arial, sans-serif";
     ctx.fillText("DOHA PROJECT", 60, 90);
@@ -1761,6 +1748,7 @@
       ctx.textAlign = "start";
     }
 
+    // 3. NO-COLOR PURE CLEAN CARD FRAME
     ctx.fillStyle = "#ffffff";
     drawRoundedRect(ctx, 160, 200, 760, 480, 24, "#ffffff");
     ctx.strokeStyle = "#e2e8f0";
@@ -1787,6 +1775,7 @@
     ctx.shadowBlur = 0;
     ctx.shadowOffsetY = 0;
 
+    // 4. BOTTOM PRODUCT INFO & CTA
     ctx.fillStyle = "#64748b";
     ctx.font = "bold 20px Arial, sans-serif";
     ctx.fillText("ITEM CODE:", 60, 745);
@@ -2103,7 +2092,6 @@
 
   async function bootstrapApp() {
     initTheme();
-    processInventoryData();
     await loadPublicStockFile();
     renderCatalog();
     checkUrlDeepLink();
