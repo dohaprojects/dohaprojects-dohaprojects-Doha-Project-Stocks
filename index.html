@@ -1136,10 +1136,10 @@
     <div class="footer-col">
       <h3>About Us</h3>
       <p>
-        <strong>DOHA PROJECT TRADING SERVICES W.L.L</strong> is an <strong>ISO 9001:2015</strong>, <strong>ISO 14001:2015</strong>, and <strong>OHSAS 45001:2018</strong> certified leader in Qatar's oil and gas sector.
+        <strong>DOHA PROJECT TRADING SERVICES W.L.L</strong> is an <strong>ISO 9001:2015</strong>, <strong>ISO 14001:2015</strong>, and <strong>OHSAS 45001:2018</strong> certified leader in Qatar's oil and gas sector[cite: 2].
       </p>
       <p>
-        As a trusted supplier, we offer high-quality piping solutions including valves, pipes, fittings, fasteners, and gaskets from internationally recognized manufacturers.
+        As a trusted supplier, we offer high-quality piping solutions including valves, pipes, fittings, fasteners, and gaskets from internationally recognized manufacturers[cite: 2].
       </p>
       <div class="footer-cert-badge">✓ ISO 9001:2015 | ISO 14001:2015 | OHSAS 45001:2018 Certified</div>
     </div>
@@ -1185,15 +1185,15 @@
   </div>
 
   <div class="footer-bottom">
-    © 2026 Doha Project Trading & Services W.L.L. All Rights Reserved. Barwa Commercial Avenue, Doha, Qatar.
+    © 2026 Doha Project Trading & Services W.L.L. All Rights Reserved. Barwa Commercial Avenue, Doha, Qatar[cite: 2].
   </div>
 </footer>
 
 <script>
   const COMPANY_EMAIL = "sales@dohaprojects.com";
   const ADMIN_PIN = "Jesus07dp";
-  const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1PyNtiW0wxCtb3hOAr_kdxiEHDAPJbzwP/export?format=csv";
-  const GOOGLE_SHEET_GVIZ_URL = "https://docs.google.com/spreadsheets/d/1PyNtiW0wxCtb3hOAr_kdxiEHDAPJbzwP/gviz/tq?tqx=out:csv";
+  const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1PyNtiW0wxCtb3hOAr_kdxiEHDAPJbzwP/gviz/tq?tqx=out:csv";
+
   let isAdmin = false;
 
   function getPlaceholderSVG() {
@@ -1395,62 +1395,50 @@
   }
 
   async function loadPublicStockFile() {
-    const fetchUrls = [
-        `${GOOGLE_SHEET_CSV_URL}&_t=${Date.now()}`,
-        `${GOOGLE_SHEET_GVIZ_URL}&_t=${Date.now()}`
-      ];
-    
-      for (const url of fetchUrls) {
-        try {
-          const response = await fetch(url, { method: 'GET', mode: 'cors' });
-          if (!response.ok) continue;
-    
-          const csvText = await response.text();
-          if (!csvText || csvText.trim().startsWith("<!DOCTYPE html>")) continue; // Skip HTML login redirect pages
-    
-          const workbook = XLSX.read(csvText, { type: 'string' });
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-          const rows = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
-    
-          if (rows && rows.length > 0) {
-            const parsedItems = [];
-            rows.forEach(row => {
-              const cleanRow = {};
-              Object.keys(row).forEach(k => { 
-                cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k]; 
-              });
-    
-              const rawCode = cleanRow['item code'] || cleanRow['code'] || cleanRow['item no'] || cleanRow['part no'] || '';
-              const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['item desc'] || cleanRow['name'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
-              const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || cleanRow['balance qty'] || 0);
-              const unit = String(cleanRow['unit'] || cleanRow['uom'] || 'NOS').trim();
-              const imgUrl = cleanRow['image'] || cleanRow['image url'] || cleanRow['photo'] || cleanRow['img'] || '';
-    
-              if (rawCode && name) {
-                parsedItems.push({
-                  code: formatSixDigitCode(rawCode),
-                  name: name,
-                  category: detectCategory(name),
-                  qty: isNaN(stock) ? 0 : stock,
-                  unit: unit,
-                  image: imgUrl
-                });
-              }
+    try {
+      const fetchUrl = `${GOOGLE_SHEET_CSV_URL}&_t=${Date.now()}`;
+      const response = await fetch(fetchUrl);
+      if (!response.ok) return;
+
+      const csvText = await response.text();
+      const workbook = XLSX.read(csvText, { type: 'string' });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+
+      if (rows && rows.length > 0) {
+        const parsedItems = [];
+        rows.forEach(row => {
+          const cleanRow = {};
+          Object.keys(row).forEach(k => { cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k]; });
+
+          const rawCode = cleanRow['item code'] || cleanRow['code'] || cleanRow['item no'] || cleanRow['part no'] || '';
+          const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['item desc'] || cleanRow['name'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
+          const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || cleanRow['balance qty'] || 0);
+          const unit = String(cleanRow['unit'] || cleanRow['uom'] || 'NOS').trim();
+          const imgUrl = cleanRow['image'] || cleanRow['image url'] || cleanRow['photo'] || cleanRow['img'] || '';
+
+          if (rawCode && name) {
+            parsedItems.push({
+              code: formatSixDigitCode(rawCode),
+              name: name,
+              category: detectCategory(name),
+              qty: isNaN(stock) ? 0 : stock,
+              unit: unit,
+              image: imgUrl
             });
-    
-            if (parsedItems.length > 0) {
-              inventory = parsedItems;
-              localStorage.setItem('materials_catalog', JSON.stringify(inventory));
-              resetAndRender();
-              return; // Successfully loaded stock feed
-            }
           }
-        } catch (err) {
-          console.warn("Fetch attempt failed for URL:", url, err);
+        });
+
+        if (parsedItems.length > 0) {
+          inventory = parsedItems;
+          localStorage.setItem('materials_catalog', JSON.stringify(inventory));
+          resetAndRender();
         }
       }
+    } catch (err) {
+      console.log("Could not load Google Sheet feed, loading cached storage.", err);
     }
+  }
 
   function getItemImage(item) {
     if (item.image && item.image.trim() !== '') return item.image.trim();
@@ -1856,6 +1844,8 @@
     ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
     ctx.lineTo(x + width, y + height - radius);
     ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+    ctx.lineTo(x + radius, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
     ctx.lineTo(x + radius, y + height);
     ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
     ctx.lineTo(x, y + radius);
