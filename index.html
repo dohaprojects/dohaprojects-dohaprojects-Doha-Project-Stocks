@@ -1192,8 +1192,8 @@
 <script>
   const COMPANY_EMAIL = "sales@dohaprojects.com";
   const ADMIN_PIN = "Jesus07dp";
-  const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1PyNtiW0wxCtb3hOAr_kdxiEHDAPJbzwP/gviz/tq?tqx=out:csv";
-
+  const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1PyNtiW0wxCtb3hOAr_kdxiEHDAPJbzwP/export?format=csv";
+  const GOOGLE_SHEET_GVIZ_URL = "https://docs.google.com/spreadsheets/d/1PyNtiW0wxCtb3hOAr_kdxiEHDAPJbzwP/gviz/tq?tqx=out:csv";
   let isAdmin = false;
 
   function getPlaceholderSVG() {
@@ -1395,50 +1395,62 @@
   }
 
   async function loadPublicStockFile() {
-    try {
-      const fetchUrl = `${GOOGLE_SHEET_CSV_URL}&_t=${Date.now()}`;
-      const response = await fetch(fetchUrl);
-      if (!response.ok) return;
-
-      const csvText = await response.text();
-      const workbook = XLSX.read(csvText, { type: 'string' });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
-
-      if (rows && rows.length > 0) {
-        const parsedItems = [];
-        rows.forEach(row => {
-          const cleanRow = {};
-          Object.keys(row).forEach(k => { cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k]; });
-
-          const rawCode = cleanRow['item code'] || cleanRow['code'] || cleanRow['item no'] || cleanRow['part no'] || '';
-          const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['item desc'] || cleanRow['name'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
-          const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || cleanRow['balance qty'] || 0);
-          const unit = String(cleanRow['unit'] || cleanRow['uom'] || 'NOS').trim();
-          const imgUrl = cleanRow['image'] || cleanRow['image url'] || cleanRow['photo'] || cleanRow['img'] || '';
-
-          if (rawCode && name) {
-            parsedItems.push({
-              code: formatSixDigitCode(rawCode),
-              name: name,
-              category: detectCategory(name),
-              qty: isNaN(stock) ? 0 : stock,
-              unit: unit,
-              image: imgUrl
+    const fetchUrls = [
+        `${GOOGLE_SHEET_CSV_URL}&_t=${Date.now()}`,
+        `${GOOGLE_SHEET_GVIZ_URL}&_t=${Date.now()}`
+      ];
+    
+      for (const url of fetchUrls) {
+        try {
+          const response = await fetch(url, { method: 'GET', mode: 'cors' });
+          if (!response.ok) continue;
+    
+          const csvText = await response.text();
+          if (!csvText || csvText.trim().startsWith("<!DOCTYPE html>")) continue; // Skip HTML login redirect pages
+    
+          const workbook = XLSX.read(csvText, { type: 'string' });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const rows = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+    
+          if (rows && rows.length > 0) {
+            const parsedItems = [];
+            rows.forEach(row => {
+              const cleanRow = {};
+              Object.keys(row).forEach(k => { 
+                cleanRow[k.replace(/[\u00a0\s]+/g, ' ').trim().toLowerCase()] = row[k]; 
+              });
+    
+              const rawCode = cleanRow['item code'] || cleanRow['code'] || cleanRow['item no'] || cleanRow['part no'] || '';
+              const name = String(cleanRow['item name'] || cleanRow['description'] || cleanRow['item desc'] || cleanRow['name'] || '').replace(/[\u00a0\s]+/g, ' ').trim();
+              const stock = parseFloat(cleanRow['stock'] || cleanRow['qty'] || cleanRow['quantity'] || cleanRow['balance qty'] || 0);
+              const unit = String(cleanRow['unit'] || cleanRow['uom'] || 'NOS').trim();
+              const imgUrl = cleanRow['image'] || cleanRow['image url'] || cleanRow['photo'] || cleanRow['img'] || '';
+    
+              if (rawCode && name) {
+                parsedItems.push({
+                  code: formatSixDigitCode(rawCode),
+                  name: name,
+                  category: detectCategory(name),
+                  qty: isNaN(stock) ? 0 : stock,
+                  unit: unit,
+                  image: imgUrl
+                });
+              }
             });
+    
+            if (parsedItems.length > 0) {
+              inventory = parsedItems;
+              localStorage.setItem('materials_catalog', JSON.stringify(inventory));
+              resetAndRender();
+              return; // Successfully loaded stock feed
+            }
           }
-        });
-
-        if (parsedItems.length > 0) {
-          inventory = parsedItems;
-          localStorage.setItem('materials_catalog', JSON.stringify(inventory));
-          resetAndRender();
+        } catch (err) {
+          console.warn("Fetch attempt failed for URL:", url, err);
         }
       }
-    } catch (err) {
-      console.log("Could not load Google Sheet feed, loading cached storage.", err);
     }
-  }
 
   function getItemImage(item) {
     if (item.image && item.image.trim() !== '') return item.image.trim();
